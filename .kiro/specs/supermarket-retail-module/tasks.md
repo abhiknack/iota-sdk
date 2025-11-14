@@ -1,0 +1,679 @@
+# Implementation Plan
+
+- [ ] 1. Set up module structure and core infrastructure
+  - Create retail module directory structure following DDD pattern
+  - Create module.go with module registration
+  - Create links.go for navigation items
+  - Create permissions/constants.go with RBAC permissions
+  - _Requirements: All requirements depend on proper module setup_
+
+- [ ] 2. Implement Payment Method aggregate and repository
+  - [ ] 2.1 Create payment method domain aggregate
+    - Write domain/aggregates/payment_method/payment_method.go interface
+    - Write domain/aggregates/payment_method/payment_method_impl.go implementation
+    - Write domain/aggregates/payment_method/payment_method_events.go for domain events
+    - Write domain/aggregates/payment_method/payment_method_repository.go interface
+    - _Requirements: 9.1, 9.2, 9.4_
+  - [ ] 2.2 Create payment method database model and repository
+    - Add PaymentMethod model to infrastructure/persistence/models/models.go
+    - Write infrastructure/persistence/payment_method_repository.go implementation
+    - Add mapper functions in infrastructure/persistence/retail_mappers.go
+    - _Requirements: 9.1, 9.2_
+  - [ ] 2.3 Create payment method service
+    - Write services/payment_method_service.go with CRUD operations
+    - Implement event publishing for payment method changes
+    - _Requirements: 9.1, 9.2, 9.3, 9.5_
+  - [ ] 2.4 Write unit tests for payment method service
+    - Create services/payment_method_service_test.go
+    - Test business rule validation
+    - _Requirements: 9.1, 9.2, 9.4_
+
+- [ ] 3. Implement Item aggregate and inventory foundation
+  - [ ] 3.1 Create item domain aggregate
+    - Write domain/aggregates/item/item.go interface
+    - Write domain/aggregates/item/item_impl.go implementation
+    - Write domain/aggregates/item/item_events.go for domain events
+    - Write domain/aggregates/item/item_repository.go interface
+    - Create domain/entities/item_variant/ for variant entities
+    - _Requirements: 2.1, 2.2, 2.5_
+  - [ ] 3.2 Create item database models and repository
+    - Add Item and ItemVariant models to infrastructure/persistence/models/models.go
+    - Write infrastructure/persistence/item_repository.go implementation
+    - Add mapper functions in infrastructure/persistence/retail_mappers.go
+    - _Requirements: 2.1, 2.5_
+  - [ ] 3.3 Create item service
+    - Write services/item_service.go with CRUD and variant management
+    - Implement validation for unique item codes
+    - Implement event publishing for item changes
+    - _Requirements: 2.1, 2.2, 2.4, 2.5_
+  - [ ] 3.4 Write unit tests for item service
+    - Create services/item_service_test.go
+    - Test item code uniqueness validation
+    - Test variant management
+    - _Requirements: 2.1, 2.5_
+
+
+- [ ] 4. Implement Stock Ledger aggregate for inventory tracking
+  - [ ] 4.1 Create stock ledger domain aggregate
+    - Write domain/aggregates/stock_ledger/stock_ledger_entry.go interface
+    - Write domain/aggregates/stock_ledger/stock_ledger_entry_impl.go implementation
+    - Write domain/aggregates/stock_ledger/stock_ledger_events.go for domain events
+    - Write domain/aggregates/stock_ledger/stock_ledger_repository.go interface
+    - _Requirements: 2.4_
+  - [ ] 4.2 Create stock ledger database model and repository
+    - Add StockLedgerEntry model to infrastructure/persistence/models/models.go
+    - Write infrastructure/persistence/stock_ledger_repository.go implementation
+    - Add mapper functions in infrastructure/persistence/retail_mappers.go
+    - Implement running balance calculation query
+    - _Requirements: 2.4_
+  - [ ] 4.3 Create inventory service
+    - Write services/inventory_service.go with stock tracking methods
+    - Implement GetStockBalance with real-time calculation
+    - Implement low stock alert generation
+    - Implement stock adjustment with audit trail
+    - Implement event publishing for stock movements
+    - _Requirements: 2.2, 2.3, 2.4_
+  - [ ] 4.4 Write unit tests for inventory service
+    - Create services/inventory_service_test.go
+    - Test stock balance calculations
+    - Test negative stock prevention
+    - Test low stock alerts
+    - _Requirements: 2.2, 2.3, 2.4_
+
+- [ ] 5. Implement Price List aggregate and pricing service
+  - [ ] 5.1 Create price list domain aggregate
+    - Write domain/aggregates/price_list/price_list.go interface
+    - Write domain/aggregates/price_list/price_list_impl.go implementation
+    - Write domain/aggregates/price_list/price_list_events.go for domain events
+    - Write domain/aggregates/price_list/price_list_repository.go interface
+    - Create domain/entities/price_list_item/ for item prices
+    - Create domain/entities/pricing_rule/ for promotional rules
+    - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5_
+  - [ ] 5.2 Create price list database models and repository
+    - Add PriceList, PriceListItem, and PricingRule models to infrastructure/persistence/models/models.go
+    - Write infrastructure/persistence/price_list_repository.go implementation
+    - Add mapper functions in infrastructure/persistence/retail_mappers.go
+    - _Requirements: 10.1, 10.2_
+  - [ ] 5.3 Create pricing service
+    - Write services/pricing_service.go with price calculation logic
+    - Implement GetItemPrice with price list lookup
+    - Implement ApplyPricingRules with priority handling
+    - Implement validity date checking
+    - Implement event publishing for price changes
+    - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5_
+  - [ ] 5.4 Write unit tests for pricing service
+    - Create services/pricing_service_test.go
+    - Test price list application
+    - Test pricing rule priority
+    - Test validity date handling
+    - _Requirements: 10.3, 10.4, 10.5_
+
+
+- [ ] 6. Implement POS Profile aggregate
+  - [ ] 6.1 Create POS profile domain aggregate
+    - Write domain/aggregates/pos_profile/pos_profile.go interface
+    - Write domain/aggregates/pos_profile/pos_profile_impl.go implementation
+    - Write domain/aggregates/pos_profile/pos_profile_events.go for domain events
+    - Write domain/aggregates/pos_profile/pos_profile_repository.go interface
+    - Create domain/entities/pos_profile_payment_method/ for payment method associations
+    - _Requirements: 1.1, 1.2, 1.4_
+  - [ ] 6.2 Create POS profile database models and repository
+    - Add POSProfile and POSProfilePaymentMethod models to infrastructure/persistence/models/models.go
+    - Write infrastructure/persistence/pos_profile_repository.go implementation
+    - Add mapper functions in infrastructure/persistence/retail_mappers.go
+    - _Requirements: 1.1, 1.2_
+  - [ ] 6.3 Create POS profile service
+    - Write services/pos_profile_service.go with CRUD operations
+    - Implement validation for at least one payment method
+    - Implement company-based access control
+    - Implement event publishing for profile changes
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+  - [ ] 6.4 Write unit tests for POS profile service
+    - Create services/pos_profile_service_test.go
+    - Test payment method validation
+    - Test company isolation
+    - _Requirements: 1.3, 1.4_
+
+- [ ] 7. Implement POS Shift aggregate for cash reconciliation
+  - [ ] 7.1 Create POS shift domain aggregate
+    - Write domain/aggregates/pos_shift/pos_shift.go interface
+    - Write domain/aggregates/pos_shift/pos_shift_impl.go implementation
+    - Write domain/aggregates/pos_shift/pos_shift_events.go for domain events
+    - Write domain/aggregates/pos_shift/pos_shift_repository.go interface
+    - Create domain/entities/shift_balance/ for opening/closing balances
+    - _Requirements: 3.1, 3.2, 5.1, 5.2_
+  - [ ] 7.2 Create POS shift database models and repository
+    - Add POSShift and ShiftBalance models to infrastructure/persistence/models/models.go
+    - Write infrastructure/persistence/pos_shift_repository.go implementation
+    - Add mapper functions in infrastructure/persistence/retail_mappers.go
+    - Implement GetActiveShift query
+    - _Requirements: 3.1, 3.3_
+  - [ ] 7.3 Create shift service
+    - Write services/shift_service.go with shift lifecycle methods
+    - Implement OpenShift with opening balance recording
+    - Implement CloseShift with variance calculation
+    - Implement GetShiftSummary with transaction aggregation
+    - Implement validation for single active shift per user/profile
+    - Implement event publishing for shift events
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 5.1, 5.2, 5.3, 5.4, 5.5_
+  - [ ] 7.4 Write unit tests for shift service
+    - Create services/shift_service_test.go
+    - Test single active shift validation
+    - Test variance calculation
+    - Test shift summary generation
+    - _Requirements: 3.3, 3.4, 5.4_
+
+
+- [ ] 8. Implement POS Invoice aggregate for sales transactions
+  - [ ] 8.1 Create POS invoice domain aggregate
+    - Write domain/aggregates/pos_invoice/pos_invoice.go interface
+    - Write domain/aggregates/pos_invoice/pos_invoice_impl.go implementation
+    - Write domain/aggregates/pos_invoice/pos_invoice_events.go for domain events
+    - Write domain/aggregates/pos_invoice/pos_invoice_repository.go interface
+    - Create domain/entities/invoice_item/ for line items
+    - Create domain/entities/invoice_payment/ for payment entries
+    - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
+  - [ ] 8.2 Create POS invoice database models and repository
+    - Add POSInvoice, InvoiceItem, and InvoicePayment models to infrastructure/persistence/models/models.go
+    - Write infrastructure/persistence/pos_invoice_repository.go implementation
+    - Add mapper functions in infrastructure/persistence/retail_mappers.go
+    - Implement GetByShift query
+    - Implement GetByDateRange query
+    - _Requirements: 4.1, 4.3_
+  - [ ] 8.3 Create POS service
+    - Write services/pos_service.go with invoice processing methods
+    - Implement CreateInvoice with shift association
+    - Implement AddItem with real-time calculation and stock validation
+    - Implement ProcessPayment with split payment support
+    - Implement SubmitInvoice with stock reduction and ledger update
+    - Implement CreateReturn with inventory restoration
+    - Integrate with PricingService for price calculation
+    - Integrate with InventoryService for stock checks
+    - Implement event publishing for invoice events
+    - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
+  - [ ] 8.4 Write unit tests for POS service
+    - Create services/pos_service_test.go
+    - Test stock validation
+    - Test payment total validation
+    - Test return processing
+    - Test price calculation integration
+    - _Requirements: 4.2, 4.3, 4.4, 4.5_
+
+- [ ] 9. Implement Sales Order aggregate
+  - [ ] 9.1 Create sales order domain aggregate
+    - Write domain/aggregates/sales_order/sales_order.go interface
+    - Write domain/aggregates/sales_order/sales_order_impl.go implementation
+    - Write domain/aggregates/sales_order/sales_order_events.go for domain events
+    - Write domain/aggregates/sales_order/sales_order_repository.go interface
+    - Create domain/entities/order_item/ for order line items
+    - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
+  - [ ] 9.2 Create sales order database models and repository
+    - Add SalesOrder and OrderItem models to infrastructure/persistence/models/models.go
+    - Write infrastructure/persistence/sales_order_repository.go implementation
+    - Add mapper functions in infrastructure/persistence/retail_mappers.go
+    - Implement GetPendingOrders query
+    - _Requirements: 6.1, 6.2_
+  - [ ] 9.3 Create sales order service
+    - Write services/sales_order_service.go with order management methods
+    - Implement CreateOrder with customer and delivery date
+    - Implement ConfirmOrder with stock reservation
+    - Implement ConvertToInvoice integration with POSService
+    - Implement CancelOrder with stock release
+    - Implement partial fulfillment tracking
+    - Implement event publishing for order events
+    - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
+  - [ ] 9.4 Write unit tests for sales order service
+    - Create services/sales_order_service_test.go
+    - Test order confirmation
+    - Test conversion to invoice
+    - Test partial fulfillment
+    - Test cancellation
+    - _Requirements: 6.3, 6.4, 6.5_
+
+
+- [ ] 10. Create database schema and migrations
+  - Write infrastructure/persistence/schema/retail-schema.sql with all tables
+  - Create indexes for frequently queried columns
+  - Add foreign key constraints
+  - Add check constraints for business rules
+  - Create company isolation policies or triggers
+  - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
+
+- [ ] 11. Implement multi-company support
+  - [ ] 11.1 Add company filtering to all repositories
+    - Update all repository methods to filter by company_id
+    - Implement GetByCompany methods where needed
+    - _Requirements: 7.1, 7.2, 7.3_
+  - [ ] 11.2 Add company validation to all services
+    - Validate user has access to specified company
+    - Enforce company isolation in business logic
+    - _Requirements: 7.1, 7.3_
+  - [ ] 11.3 Implement company-specific number series
+    - Create number series generator for invoices and orders
+    - Ensure uniqueness per company
+    - _Requirements: 7.5_
+
+- [ ] 12. Create DTOs for presentation layer
+  - Create presentation/controllers/dtos/payment_method_dto.go
+  - Create presentation/controllers/dtos/item_dto.go
+  - Create presentation/controllers/dtos/pos_profile_dto.go
+  - Create presentation/controllers/dtos/pos_shift_dto.go
+  - Create presentation/controllers/dtos/pos_invoice_dto.go
+  - Create presentation/controllers/dtos/sales_order_dto.go
+  - Create presentation/controllers/dtos/price_list_dto.go
+  - Add validation tags to all DTOs
+  - _Requirements: All requirements - DTOs needed for API layer_
+
+- [ ] 13. Create viewmodels for UI rendering
+  - Create presentation/viewmodels/payment_method_viewmodel.go
+  - Create presentation/viewmodels/item_viewmodel.go
+  - Create presentation/viewmodels/pos_profile_viewmodel.go
+  - Create presentation/viewmodels/pos_terminal_viewmodel.go
+  - Create presentation/viewmodels/shift_viewmodel.go
+  - Create presentation/viewmodels/invoice_viewmodel.go
+  - Create presentation/viewmodels/sales_order_viewmodel.go
+  - Create presentation/viewmodels/report_viewmodel.go
+  - _Requirements: All requirements - ViewModels needed for UI_
+
+- [ ] 14. Create presentation mappers
+  - Write presentation/mappers/mappers.go with domain-to-DTO conversions
+  - Implement DTO-to-domain conversions
+  - Implement domain-to-viewmodel conversions
+  - _Requirements: All requirements - Mappers needed for layer translation_
+
+
+- [ ] 15. Implement Payment Method controller and UI
+  - [ ] 15.1 Create payment method controller
+    - Write presentation/controllers/payment_method_controller.go
+    - Implement List handler with pagination
+    - Implement Create handler
+    - Implement Update handler
+    - Implement Delete handler with validation
+    - Add permission checks
+    - _Requirements: 9.1, 9.2_
+  - [ ] 15.2 Create payment method templates
+    - Create presentation/templates/pages/payment_method/list.templ
+    - Create presentation/templates/pages/payment_method/edit.templ
+    - Create presentation/templates/pages/payment_method/new.templ
+    - Add HTMX interactions for dynamic updates
+    - _Requirements: 9.1, 9.2_
+  - [ ] 15.3 Write controller tests
+    - Create presentation/controllers/payment_method_controller_test.go
+    - Test CRUD operations
+    - Test permission enforcement
+    - _Requirements: 9.1, 9.2_
+
+- [ ] 16. Implement Item controller and UI
+  - [ ] 16.1 Create item controller
+    - Write presentation/controllers/item_controller.go
+    - Implement List handler with filtering and search
+    - Implement Create handler with variant support
+    - Implement Update handler
+    - Implement Delete handler with stock validation
+    - Implement GetByCode API endpoint for barcode lookup
+    - Add permission checks
+    - _Requirements: 2.1, 2.2, 2.5_
+  - [ ] 16.2 Create item templates
+    - Create presentation/templates/pages/item/list.templ with filters
+    - Create presentation/templates/pages/item/edit.templ with variant management
+    - Create presentation/templates/pages/item/new.templ
+    - Create presentation/templates/components/item_card.templ for catalog view
+    - Add HTMX interactions for variant management
+    - _Requirements: 2.1, 2.5_
+  - [ ] 16.3 Write controller tests
+    - Create presentation/controllers/item_controller_test.go
+    - Test CRUD operations
+    - Test variant management
+    - Test barcode lookup
+    - _Requirements: 2.1, 2.5_
+
+- [ ] 17. Implement POS Profile controller and UI
+  - [ ] 17.1 Create POS profile controller
+    - Write presentation/controllers/pos_profile_controller.go
+    - Implement List handler
+    - Implement Create handler with payment method configuration
+    - Implement Update handler
+    - Implement Delete handler with active shift validation
+    - Add permission checks
+    - _Requirements: 1.1, 1.2, 1.4_
+  - [ ] 17.2 Create POS profile templates
+    - Create presentation/templates/pages/pos_profile/list.templ
+    - Create presentation/templates/pages/pos_profile/edit.templ with payment method selection
+    - Create presentation/templates/pages/pos_profile/new.templ
+    - Add HTMX interactions for payment method management
+    - _Requirements: 1.1, 1.2_
+  - [ ] 17.3 Write controller tests
+    - Create presentation/controllers/pos_profile_controller_test.go
+    - Test CRUD operations
+    - Test payment method validation
+    - _Requirements: 1.4_
+
+
+- [ ] 18. Implement POS Terminal controller and UI
+  - [ ] 18.1 Create POS terminal controller
+    - Write presentation/controllers/pos_terminal_controller.go
+    - Implement terminal home handler with profile selection
+    - Implement cart management endpoints (add item, remove item, update quantity)
+    - Implement item search endpoint with barcode support
+    - Implement payment processing endpoint
+    - Implement invoice submission endpoint
+    - Implement receipt generation
+    - Add HTMX response headers for dynamic updates
+    - Add permission checks
+    - _Requirements: 4.1, 4.2, 4.3, 4.4_
+  - [ ] 18.2 Create POS terminal templates
+    - Create presentation/templates/pages/pos/terminal.templ with split layout
+    - Create presentation/templates/components/pos_cart.templ for cart display
+    - Create presentation/templates/components/pos_item_grid.templ for item catalog
+    - Create presentation/templates/components/pos_payment_modal.templ for payment entry
+    - Create presentation/templates/components/pos_receipt.templ for receipt display
+    - Add HTMX attributes for real-time updates
+    - Add keyboard shortcuts for common actions
+    - _Requirements: 4.1, 4.2, 4.3, 4.4_
+  - [ ] 18.3 Write controller tests
+    - Create presentation/controllers/pos_terminal_controller_test.go
+    - Test cart operations
+    - Test payment processing
+    - Test invoice submission
+    - _Requirements: 4.2, 4.3, 4.4_
+
+- [ ] 19. Implement Shift Management controller and UI
+  - [ ] 19.1 Create shift controller
+    - Write presentation/controllers/shift_controller.go
+    - Implement List handler for shift history
+    - Implement OpenShift handler with opening balance form
+    - Implement CloseShift handler with closing balance form and variance display
+    - Implement GetShiftSummary handler for shift details
+    - Implement GetActiveShift API endpoint
+    - Add permission checks
+    - _Requirements: 3.1, 3.2, 3.4, 5.1, 5.2, 5.3, 5.4_
+  - [ ] 19.2 Create shift templates
+    - Create presentation/templates/pages/shift/list.templ
+    - Create presentation/templates/pages/shift/open.templ with balance entry form
+    - Create presentation/templates/pages/shift/close.templ with variance calculation
+    - Create presentation/templates/pages/shift/summary.templ with transaction list
+    - Add HTMX interactions for balance calculations
+    - _Requirements: 3.1, 3.2, 5.1, 5.2, 5.3_
+  - [ ] 19.3 Write controller tests
+    - Create presentation/controllers/shift_controller_test.go
+    - Test shift opening
+    - Test shift closing
+    - Test variance calculation
+    - _Requirements: 3.3, 3.4, 5.4_
+
+
+- [ ] 20. Implement Sales Order controller and UI
+  - [ ] 20.1 Create sales order controller
+    - Write presentation/controllers/sales_order_controller.go
+    - Implement List handler with status filtering
+    - Implement Create handler with customer selection
+    - Implement Update handler
+    - Implement ConvertToInvoice handler
+    - Implement Cancel handler
+    - Add permission checks
+    - _Requirements: 6.1, 6.2, 6.3, 6.5_
+  - [ ] 20.2 Create sales order templates
+    - Create presentation/templates/pages/sales_order/list.templ with status badges
+    - Create presentation/templates/pages/sales_order/edit.templ with item selection
+    - Create presentation/templates/pages/sales_order/new.templ
+    - Create presentation/templates/components/order_status_badge.templ
+    - Add HTMX interactions for item management and conversion
+    - _Requirements: 6.1, 6.2, 6.3_
+  - [ ] 20.3 Write controller tests
+    - Create presentation/controllers/sales_order_controller_test.go
+    - Test CRUD operations
+    - Test order conversion
+    - Test cancellation
+    - _Requirements: 6.3, 6.5_
+
+- [ ] 21. Implement Inventory Management controller and UI
+  - [ ] 21.1 Create inventory controller
+    - Write presentation/controllers/inventory_controller.go
+    - Implement stock balance view handler
+    - Implement stock movement history handler
+    - Implement stock adjustment handler
+    - Implement low stock alerts handler
+    - Add permission checks
+    - _Requirements: 2.2, 2.3, 2.4_
+  - [ ] 21.2 Create inventory templates
+    - Create presentation/templates/pages/inventory/stock_balance.templ
+    - Create presentation/templates/pages/inventory/movement_history.templ
+    - Create presentation/templates/pages/inventory/adjust_stock.templ
+    - Create presentation/templates/components/low_stock_alert.templ
+    - Add HTMX interactions for real-time balance updates
+    - _Requirements: 2.2, 2.3, 2.4_
+  - [ ] 21.3 Write controller tests
+    - Create presentation/controllers/inventory_controller_test.go
+    - Test stock balance retrieval
+    - Test stock adjustment
+    - Test low stock alerts
+    - _Requirements: 2.2, 2.3_
+
+- [ ] 22. Implement Price List controller and UI
+  - [ ] 22.1 Create price list controller
+    - Write presentation/controllers/price_list_controller.go
+    - Implement List handler
+    - Implement Create handler with item price entry
+    - Implement Update handler
+    - Implement pricing rule management handlers
+    - Add permission checks
+    - _Requirements: 10.1, 10.2, 10.3, 10.4_
+  - [ ] 22.2 Create price list templates
+    - Create presentation/templates/pages/price_list/list.templ
+    - Create presentation/templates/pages/price_list/edit.templ with item price grid
+    - Create presentation/templates/pages/price_list/new.templ
+    - Create presentation/templates/pages/pricing_rule/edit.templ
+    - Add HTMX interactions for bulk price updates
+    - _Requirements: 10.1, 10.2, 10.3_
+  - [ ] 22.3 Write controller tests
+    - Create presentation/controllers/price_list_controller_test.go
+    - Test CRUD operations
+    - Test pricing rule management
+    - _Requirements: 10.1, 10.2_
+
+
+- [ ] 23. Implement Reporting controller and UI
+  - [ ] 23.1 Create report service
+    - Write services/report_service.go with report generation methods
+    - Implement GetDailySalesSummary with payment breakdown
+    - Implement GetShiftReport with transaction details
+    - Implement GetTopSellingItems
+    - Implement GetInventoryReport
+    - Implement GetSalesAnalytics with KPIs
+    - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
+  - [ ] 23.2 Create report controller
+    - Write presentation/controllers/report_controller.go
+    - Implement dashboard handler
+    - Implement sales report handler with date range filtering
+    - Implement inventory report handler
+    - Implement shift report handler
+    - Add company filtering for multi-company reports
+    - Add permission checks
+    - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
+  - [ ] 23.3 Create report templates
+    - Create presentation/templates/pages/report/dashboard.templ with KPI cards
+    - Create presentation/templates/pages/report/sales.templ with charts
+    - Create presentation/templates/pages/report/inventory.templ
+    - Create presentation/templates/pages/report/shift.templ
+    - Create presentation/templates/components/kpi_card.templ
+    - Add HTMX interactions for date range filtering
+    - _Requirements: 8.1, 8.2, 8.3, 8.4_
+  - [ ] 23.4 Write report service tests
+    - Create services/report_service_test.go
+    - Test sales summary calculation
+    - Test KPI calculations
+    - Test multi-company filtering
+    - _Requirements: 8.1, 8.4, 8.5_
+
+- [ ] 24. Create localization files
+  - Create presentation/locales/en.json with all English translations
+  - Create presentation/locales/ru.json with all Russian translations
+  - Create presentation/locales/uz.json with all Uzbek translations
+  - Include NavigationLinks, Meta titles, form labels, validation messages
+  - Include error messages and success notifications
+  - _Requirements: All requirements - Localization needed for UI_
+
+- [ ] 25. Register module components
+  - [ ] 25.1 Update module.go with service registration
+    - Register all services in app.RegisterServices()
+    - Set up service dependencies
+    - _Requirements: All requirements_
+  - [ ] 25.2 Update module.go with controller registration
+    - Register all controllers in app.RegisterControllers()
+    - _Requirements: All requirements_
+  - [ ] 25.3 Update module.go with quick links
+    - Add quick links to app.QuickLinks().Add()
+    - Include icons for navigation items
+    - _Requirements: All requirements_
+  - [ ] 25.4 Update links.go with navigation items
+    - Define navigation links for all major sections
+    - Set up menu structure
+    - _Requirements: All requirements_
+  - [ ] 25.5 Register locale files and migrations
+    - Register localeFiles with app.RegisterLocaleFiles()
+    - Register migrationFiles with app.Migrations().RegisterSchema()
+    - _Requirements: All requirements_
+
+
+- [ ] 26. Implement value objects
+  - Create domain/value_objects/money.go for currency handling
+  - Create domain/value_objects/quantity.go for measurement units
+  - Create domain/value_objects/item_code.go for item identification
+  - Implement validation and immutability for all value objects
+  - _Requirements: 2.1, 4.1, 10.1_
+
+- [ ] 27. Add integration with core modules
+  - [ ] 27.1 Integrate with authentication module
+    - Use existing user authentication in controllers
+    - Implement user-based shift tracking
+    - _Requirements: 3.1, 5.1_
+  - [ ] 27.2 Integrate with permissions module
+    - Apply RBAC checks in all controllers
+    - Implement company-based permission filtering
+    - _Requirements: 1.3, 7.3_
+  - [ ] 27.3 Integrate with file upload module
+    - Add item image upload support
+    - Add receipt attachment support
+    - Use core upload repository
+    - _Requirements: 2.1_
+
+- [ ] 28. Implement event handlers for cross-module communication
+  - Create handlers/invoice_handler.go for invoice events
+  - Create handlers/inventory_handler.go for stock events
+  - Create handlers/shift_handler.go for shift events
+  - Register event handlers in module.go
+  - _Requirements: 2.3, 4.3, 5.3_
+
+- [ ] 29. Add search and filtering capabilities
+  - [ ] 29.1 Implement item search
+    - Add full-text search for items by name and code
+    - Add barcode lookup functionality
+    - Add category-based filtering
+    - _Requirements: 2.1_
+  - [ ] 29.2 Implement invoice search
+    - Add search by invoice number, customer, date range
+    - Add filtering by status and payment method
+    - _Requirements: 4.1_
+  - [ ] 29.3 Implement order search
+    - Add search by order number, customer
+    - Add filtering by status and delivery date
+    - _Requirements: 6.1, 6.2_
+
+- [ ] 30. Implement data validation and error handling
+  - Add input validation for all DTOs
+  - Implement domain error types in pkg/serrors
+  - Add error mapping in controllers
+  - Implement user-friendly error messages
+  - Add validation error display in templates
+  - _Requirements: All requirements - Validation needed throughout_
+
+- [ ] 31. Add performance optimizations
+  - [ ] 31.1 Implement database indexes
+    - Add indexes to schema file for frequently queried columns
+    - Add composite indexes for common query patterns
+    - _Requirements: All requirements_
+  - [ ] 31.2 Implement caching
+    - Cache item catalog with TTL
+    - Cache active price lists
+    - Cache POS profile configurations
+    - Implement cache invalidation on updates
+    - _Requirements: 2.1, 10.1, 1.1_
+  - [ ] 31.3 Implement pagination
+    - Add pagination to all list endpoints
+    - Implement cursor-based pagination for large datasets
+    - _Requirements: All list views_
+
+
+- [ ] 32. Implement audit trail and logging
+  - Add audit logging for all critical operations
+  - Log invoice submissions with user and timestamp
+  - Log stock adjustments with reason and user
+  - Log shift opening/closing with balances
+  - Log price changes with old and new values
+  - _Requirements: All requirements - Audit trail needed for compliance_
+
+- [ ] 33. Add data export functionality
+  - Implement CSV export for sales reports
+  - Implement CSV export for inventory reports
+  - Implement PDF receipt generation
+  - Implement Excel export for detailed reports
+  - _Requirements: 8.1, 8.2, 8.3_
+
+- [ ] 34. Create setup wizard for initial configuration
+  - Create presentation/controllers/setup_controller.go
+  - Implement wizard for first-time setup
+  - Guide user through payment method creation
+  - Guide user through POS profile creation
+  - Guide user through initial item import
+  - _Requirements: 1.1, 9.1, 2.1_
+
+- [ ] 35. Add keyboard shortcuts for POS terminal
+  - Implement keyboard navigation for item selection
+  - Add shortcut for payment (F2)
+  - Add shortcut for cancel (ESC)
+  - Add shortcut for quantity entry (F3)
+  - Add shortcut for search (F4)
+  - Document shortcuts in UI
+  - _Requirements: 4.1, 4.2_
+
+- [ ] 36. Implement offline mode support (future enhancement)
+  - Design offline data storage strategy
+  - Implement local storage for cart data
+  - Implement sync mechanism when online
+  - Add offline indicator in UI
+  - _Requirements: 4.1, 4.3 - Future enhancement_
+
+- [ ] 37. Add barcode generation for items
+  - Implement barcode generation service
+  - Add barcode display in item templates
+  - Add barcode printing functionality
+  - Support multiple barcode formats (EAN-13, Code128)
+  - _Requirements: 2.1_
+
+- [ ] 38. Implement customer management integration
+  - Create customer selection component for POS
+  - Add customer lookup by phone/email
+  - Integrate with CRM module if available
+  - Add quick customer creation from POS
+  - _Requirements: 4.1, 6.1_
+
+- [ ] 39. Add receipt customization
+  - Create receipt template configuration
+  - Allow custom header/footer text
+  - Allow logo upload for receipts
+  - Support multiple receipt formats
+  - _Requirements: 4.3_
+
+- [ ] 40. Final integration and testing
+  - Run `templ generate` to generate template code
+  - Run `make css` to compile stylesheets
+  - Run `go vet ./...` to verify compilation
+  - Apply database migrations with `make db migrate up`
+  - Verify all services are registered correctly
+  - Verify all controllers are registered correctly
+  - Verify all navigation links work
+  - Test complete POS workflow end-to-end
+  - Test shift opening and closing workflow
+  - Test sales order to invoice conversion
+  - Test multi-company isolation
+  - _Requirements: All requirements - Final verification_

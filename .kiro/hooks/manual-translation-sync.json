@@ -1,0 +1,9 @@
+{
+  "name": "Sync Translations",
+  "description": "Ensure all translation files (en/ru/uz) are synchronized",
+  "trigger": {
+    "type": "manual"
+  },
+  "enabled": true,
+  "prompt": "Synchronize translation files across all languages:\n\n1. Run `make check tr` to identify inconsistencies\n2. For each missing or inconsistent translation:\n   - Add/update in en.toml (English)\n   - Add/update in ru.toml (Russian)\n   - Add/update in uz.toml (Uzbek)\n3. Ensure proper key naming (avoid TOML reserved words)\n4. Follow enum pattern: `Module.Enums.EnumType.VALUE`\n5. Run `make check tr` again to verify\n\nReport what was synchronized and any remaining issues."
+}

@@ -16,13 +16,44 @@ services:
     image: redis:latest
     restart: always
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - sdk-redis:/data
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    working_dir: /build
+    ports:
+      - "3200:3200"
+    volumes:
+      - .:/build
+      - go-cache:/go/pkg/mod
+    environment:
+      - PORT=3200
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=iota_erp
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - LOG_LEVEL=debug
+      - SESSION_DURATION=720h
+      - DOMAIN=localhost:3200
+      - ORIGIN=http://localhost:3200
+      - GO_APP_ENV=production
+    depends_on:
+      - db
+      - redis
+    stdin_open: true
+    tty: true
+
 volumes:
   sdk-data:
-    name: sdk-data
+    external: true
   sdk-redis:
-    name: sdk-redis
+    external: true
+  go-cache:
 

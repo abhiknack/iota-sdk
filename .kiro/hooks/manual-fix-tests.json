@@ -1,0 +1,9 @@
+{
+  "name": "Fix Failing Tests",
+  "description": "Identify and fix all failing tests in the project",
+  "trigger": {
+    "type": "manual"
+  },
+  "enabled": true,
+  "prompt": "Fix all failing tests using this systematic approach:\n\n1. Run `go vet ./...` first to catch compilation errors\n2. Run `make test` to identify failing tests\n3. For each failing test:\n   - Read the error message and stack trace\n   - Examine the test code and implementation\n   - Fix incrementally (don't rewrite everything)\n   - Run the specific test: `go test -v ./path -run TestName`\n   - Verify it passes before moving to the next\n\n4. After all fixes, run `make test` to ensure no regressions\n\nProvide a summary of tests fixed and any remaining issues."
+}

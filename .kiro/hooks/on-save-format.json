@@ -1,0 +1,10 @@
+{
+  "name": "Format on Save",
+  "description": "Automatically format Go and Templ files when saved",
+  "trigger": {
+    "type": "onSave",
+    "filePattern": "**/*.{go,templ}"
+  },
+  "enabled": false,
+  "prompt": "A file was just saved: {{filePath}}\n\nIf it's a .go file, run `go fmt {{filePath}}`\nIf it's a .templ file, run `templ fmt {{filePath}}`\n\nOnly format the specific file that was saved. Report success or any errors."
+}

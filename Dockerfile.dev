@@ -1,0 +1,18 @@
+FROM golang:1.23.2-alpine
+
+# Install system dependencies
+RUN apk add --no-cache make git curl bash nodejs npm
+
+# Install Node.js tools
+RUN npm install -g tailwindcss
+
+# Install Go tools
+RUN go install github.com/a-h/templ/cmd/templ@latest && \
+    go install github.com/air-verse/air@v1.52.3
+
+WORKDIR /build
+
+# Set PATH to include Go binaries
+ENV PATH="/go/bin:${PATH}"
+
+CMD ["air"]

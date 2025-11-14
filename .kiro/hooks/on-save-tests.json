@@ -1,0 +1,10 @@
+{
+  "name": "Run Tests on Save",
+  "description": "Run relevant tests when Go files are saved",
+  "trigger": {
+    "type": "onSave",
+    "filePattern": "**/*_test.go"
+  },
+  "enabled": false,
+  "prompt": "A test file was saved: {{filePath}}\n\nRun the tests for this specific file:\n`go test -v {{fileDir}} -run {{testPattern}}`\n\nIf all tests pass, report success briefly.\nIf tests fail, show the failure details and suggest fixes."
+}

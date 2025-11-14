@@ -1,0 +1,9 @@
+{
+  "name": "Fix Linting Issues",
+  "description": "Run linting checks and fix issues across the codebase",
+  "trigger": {
+    "type": "manual"
+  },
+  "enabled": true,
+  "prompt": "Run `make check lint` to identify linting issues.\n\nFix all issues found:\n1. Remove unused variables, functions, constants, and imports\n2. Fix any formatting issues\n3. Address any other linting warnings\n\nWork systematically through each file with issues.\nRun `make check lint` again after fixes to verify.\n\nProvide a summary of what was fixed."
+}

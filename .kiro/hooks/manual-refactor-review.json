@@ -1,0 +1,9 @@
+{
+  "name": "Refactor & Review Code",
+  "description": "Comprehensive code review and refactoring of uncommitted changes",
+  "trigger": {
+    "type": "manual"
+  },
+  "enabled": true,
+  "prompt": "Perform comprehensive refactoring and code review:\n\n1. Check `git status` and `git diff` to see uncommitted changes\n2. Analyze all changed files for:\n   - SQL injection risks (string concatenation in queries)\n   - Security issues (missing templ.URL, XSS vulnerabilities)\n   - DRY violations (duplicated code)\n   - Hard-coded values (should be constants/enums)\n   - Wrong API usage (direct HTMX headers, manual parsing)\n   - Code smells (unused code, long functions)\n\n3. Fix issues by priority:\n   - Critical security issues first\n   - Then API misuse and DRY violations\n   - Finally style improvements\n\n4. Run validation:\n   - `go vet ./...`\n   - `make check tr` (if translations changed)\n\n5. Provide detailed report of changes made."
+}
