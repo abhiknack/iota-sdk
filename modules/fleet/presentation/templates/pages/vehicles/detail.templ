@@ -1,0 +1,192 @@
+package vehicles
+
+import (
+	"fmt"
+	icons "github.com/iota-uz/icons/phosphor"
+	"github.com/iota-uz/iota-sdk/components/base/badge"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/navtabs"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type DetailPageProps struct {
+	Vehicle *viewmodels.VehicleDetailViewModel
+	StatusOptions []struct {
+		Value     string
+		MessageID string
+		Disabled  bool
+	}
+}
+
+templ VehicleInfo(vehicle *viewmodels.VehicleDetailViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+		<div class="space-y-4">
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Vehicles.Single.Make") }</label>
+				<p class="mt-1 text-base">{ vehicle.Make }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Vehicles.Single.Model") }</label>
+				<p class="mt-1 text-base">{ vehicle.Model }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Vehicles.Single.Year") }</label>
+				<p class="mt-1 text-base">{ fmt.Sprintf("%d", vehicle.Year) }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Vehicles.Single.VIN") }</label>
+				<p class="mt-1 text-base font-mono">{ vehicle.VIN }</p>
+			</div>
+		</div>
+		<div class="space-y-4">
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Vehicles.Single.LicensePlate") }</label>
+				<p class="mt-1 text-base font-mono">{ vehicle.LicensePlate }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Vehicles.List.Status") }</label>
+				<div class="mt-1">
+					@badge.New(badge.Props{
+						Size:    badge.SizeNormal,
+						Variant: vehicle.StatusBadgeVariant,
+					}) {
+						{ pageCtx.T(fmt.Sprintf("Fleet.Enums.VehicleStatus.%s", vehicle.Status)) }
+					}
+				</div>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Vehicles.Single.CurrentOdometer") }</label>
+				<p class="mt-1 text-base">{ fmt.Sprintf("%d km", vehicle.CurrentOdometer) }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Vehicles.Single.RegistrationExpiry") }</label>
+				<div class="mt-1" x-data="relativeformat">
+					<span x-text={ fmt.Sprintf("format('%s')", vehicle.RegistrationExpiry) }></span>
+				</div>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Vehicles.Single.InsuranceExpiry") }</label>
+				<div class="mt-1" x-data="relativeformat">
+					<span x-text={ fmt.Sprintf("format('%s')", vehicle.InsuranceExpiry) }></span>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ VehicleTrips(vehicle *viewmodels.VehicleDetailViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="space-y-4">
+		<p class="text-sm text-200">{ pageCtx.T("Fleet.Vehicles.Detail.TripsComingSoon") }</p>
+	</div>
+}
+
+templ VehicleMaintenance(vehicle *viewmodels.VehicleDetailViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="space-y-4">
+		<p class="text-sm text-200">{ pageCtx.T("Fleet.Vehicles.Detail.MaintenanceComingSoon") }</p>
+	</div>
+}
+
+templ VehicleFuel(vehicle *viewmodels.VehicleDetailViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="space-y-4">
+		<p class="text-sm text-200">{ pageCtx.T("Fleet.Vehicles.Detail.FuelComingSoon") }</p>
+	</div>
+}
+
+templ DetailContent(props *DetailPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="m-6">
+		<div class="flex items-center justify-between mb-5">
+			<div>
+				<h1 class="text-2xl font-medium">
+					{ props.Vehicle.FullName }
+				</h1>
+				<p class="text-sm text-200 mt-1">{ props.Vehicle.LicensePlate }</p>
+			</div>
+			<div class="flex gap-3">
+				@button.Secondary(button.Props{
+					Size: button.SizeNormal,
+					Href: fmt.Sprintf("/fleet/vehicles/%s", props.Vehicle.ID),
+					Icon: icons.PencilSimple(icons.Props{Size: "18"}),
+				}) {
+					{ pageCtx.T("Edit") }
+				}
+			</div>
+		</div>
+		<div class="bg-surface-600 border border-primary rounded-lg p-6">
+			<div class="mb-6">
+				<h3 class="text-sm font-medium text-200 mb-3">{ pageCtx.T("Fleet.Vehicles.Detail.ChangeStatus") }</h3>
+				<form
+					hx-post={ fmt.Sprintf("/fleet/vehicles/%s/status", props.Vehicle.ID) }
+					hx-trigger="change"
+					hx-swap="none"
+					class="flex gap-2 flex-wrap"
+				>
+					for _, option := range props.StatusOptions {
+						<button
+							type="submit"
+							name="Status"
+							value={ option.Value }
+							disabled?={ option.Disabled }
+							class="px-4 py-2 text-sm font-medium rounded-lg border transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-100 border-primary"
+						>
+							{ pageCtx.T(option.MessageID) }
+						</button>
+					}
+				</form>
+			</div>
+			@navtabs.Root(navtabs.Props{
+				DefaultValue: "info",
+			}) {
+				@navtabs.List("") {
+					@navtabs.Button("info") {
+						{ pageCtx.T("Fleet.Vehicles.Detail.Tabs.Info") }
+					}
+					@navtabs.Button("trips") {
+						{ pageCtx.T("Fleet.Vehicles.Detail.Tabs.Trips") }
+					}
+					@navtabs.Button("maintenance") {
+						{ pageCtx.T("Fleet.Vehicles.Detail.Tabs.Maintenance") }
+					}
+					@navtabs.Button("fuel") {
+						{ pageCtx.T("Fleet.Vehicles.Detail.Tabs.Fuel") }
+					}
+				}
+				@navtabs.Content("info") {
+					<div class="mt-6">
+						@VehicleInfo(props.Vehicle)
+					</div>
+				}
+				@navtabs.Content("trips") {
+					<div class="mt-6">
+						@VehicleTrips(props.Vehicle)
+					</div>
+				}
+				@navtabs.Content("maintenance") {
+					<div class="mt-6">
+						@VehicleMaintenance(props.Vehicle)
+					</div>
+				}
+				@navtabs.Content("fuel") {
+					<div class="mt-6">
+						@VehicleFuel(props.Vehicle)
+					</div>
+				}
+			}
+		</div>
+	</div>
+}
+
+templ Detail(props *DetailPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Vehicles.Meta.Detail.Title")},
+	}) {
+		@DetailContent(props)
+	}
+}

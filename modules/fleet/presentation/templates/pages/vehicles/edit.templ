@@ -1,0 +1,177 @@
+package vehicles
+
+import (
+	"fmt"
+	icons "github.com/iota-uz/icons/phosphor"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/card"
+	"github.com/iota-uz/iota-sdk/components/base/dialog"
+	"github.com/iota-uz/iota-sdk/components/base/input"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type EditPageProps struct {
+	Vehicle *viewmodels.VehicleFormViewModel
+}
+
+templ EditForm(props *EditPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="flex flex-col justify-between h-full" id="edit-content">
+		@card.Card(card.Props{
+			Class:        "grid grid-cols-1 md:grid-cols-2 gap-4",
+			WrapperClass: "m-6",
+		}) {
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.Make"),
+				Attrs: templ.Attributes{
+					"name":     "Make",
+					"value":    props.Vehicle.Make,
+					"form":     "save-form",
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["Make"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.Model"),
+				Attrs: templ.Attributes{
+					"name":     "Model",
+					"value":    props.Vehicle.Model,
+					"form":     "save-form",
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["Model"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.Year"),
+				Attrs: templ.Attributes{
+					"name":     "Year",
+					"value":    props.Vehicle.Year,
+					"form":     "save-form",
+					"min":      "1900",
+					"max":      "2100",
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["Year"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.VIN"),
+				Attrs: templ.Attributes{
+					"name":      "VIN",
+					"value":     props.Vehicle.VIN,
+					"form":      "save-form",
+					"maxlength": "17",
+					"minlength": "17",
+					"required":  true,
+				},
+				Error: props.Vehicle.Errors["VIN"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.LicensePlate"),
+				Attrs: templ.Attributes{
+					"name":     "LicensePlate",
+					"value":    props.Vehicle.LicensePlate,
+					"form":     "save-form",
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["LicensePlate"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.CurrentOdometer"),
+				Attrs: templ.Attributes{
+					"name":     "CurrentOdometer",
+					"value":    props.Vehicle.CurrentOdometer,
+					"form":     "save-form",
+					"min":      "0",
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["CurrentOdometer"],
+			})
+			@input.Date(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.RegistrationExpiry"),
+				Attrs: templ.Attributes{
+					"name":     "RegistrationExpiry",
+					"value":    props.Vehicle.RegistrationExpiry,
+					"form":     "save-form",
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["RegistrationExpiry"],
+			})
+			@input.Date(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.InsuranceExpiry"),
+				Attrs: templ.Attributes{
+					"name":     "InsuranceExpiry",
+					"value":    props.Vehicle.InsuranceExpiry,
+					"form":     "save-form",
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["InsuranceExpiry"],
+			})
+		}
+		<div x-data class="h-20 shadow-t-lg border-t w-full flex items-center justify-end px-8 bg-surface-300 border-t-primary mt-auto gap-4">
+			<form
+				id="delete-form"
+				hx-post={ fmt.Sprintf("/fleet/vehicles/%s/delete", props.Vehicle.ID) }
+				hx-trigger="submit"
+				hx-target="closest .content"
+				hx-swap="innerHTML"
+				hx-indicator="#delete-vehicle-btn"
+				hx-disabled-elt="find button"
+			>
+				@button.Danger(button.Props{
+					Size: button.SizeMD,
+					Attrs: templ.Attributes{
+						"type":   "button",
+						"@click": "$dispatch('open-delete-vehicle-confirmation')",
+						"id":     "delete-vehicle-btn",
+					},
+				}) {
+					{ pageCtx.T("Delete") }
+				}
+			</form>
+			<form
+				id="save-form"
+				method="post"
+				hx-post={ fmt.Sprintf("/fleet/vehicles/%s", props.Vehicle.ID) }
+				hx-indicator="#save-btn"
+				hx-target="#edit-content"
+				hx-swap="outerHTML"
+			>
+				@button.Primary(button.Props{
+					Size: button.SizeMD,
+					Attrs: templ.Attributes{
+						"id": "save-btn",
+					},
+				}) {
+					{ pageCtx.T("Save") }
+				}
+			</form>
+		</div>
+	</div>
+}
+
+templ Edit(props *EditPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Vehicles.Meta.Edit.Title")},
+	}) {
+		@EditForm(props)
+		@dialog.Confirmation(&dialog.Props{
+			CancelText:  pageCtx.T("Cancel"),
+			ConfirmText: pageCtx.T("Delete"),
+			Heading:     pageCtx.T("Fleet.Vehicles.Single.Delete"),
+			Text:        pageCtx.T("Fleet.Vehicles.Single.DeleteConfirmation"),
+			Icon:        icons.Trash(icons.Props{Size: "20"}),
+			Action:      "open-delete-vehicle-confirmation",
+			Attrs: templ.Attributes{
+				"@closing": `({target}) => {
+					if (target.returnValue === "confirm") {
+						let deleteForm = document.getElementById("delete-form");
+						htmx.trigger(deleteForm, "submit");
+					}
+				}`,
+			},
+		})
+	}
+}

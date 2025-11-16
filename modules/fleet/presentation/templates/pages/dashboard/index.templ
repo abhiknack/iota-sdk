@@ -1,0 +1,160 @@
+package dashboard
+
+import (
+	"fmt"
+	"github.com/iota-uz/iota-sdk/components/base/badge"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/card"
+	"github.com/iota-uz/iota-sdk/components/charts"
+	icons "github.com/iota-uz/icons/phosphor"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+templ Index(props *viewmodels.DashboardViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Dashboard.Meta.Title")},
+	}) {
+		<div class="p-6">
+			<div class="mb-6">
+				<h1 class="text-2xl font-bold text-200">{ pageCtx.T("Fleet.Dashboard.Title") }</h1>
+				<p class="text-sm text-300 mt-1">{ pageCtx.T("Fleet.Dashboard.Subtitle") }</p>
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+				@StatCard(StatCardProps{
+					Title:    pageCtx.T("Fleet.Dashboard.Stats.TotalVehicles"),
+					Value:    fmt.Sprintf("%d", props.TotalVehicles),
+					Icon:     icons.Car(icons.Props{Size: "24"}),
+					Variant:  badge.VariantBlue,
+					SubStats: []SubStat{
+						{Label: pageCtx.T("Fleet.Dashboard.Stats.Active"), Value: fmt.Sprintf("%d", props.ActiveVehicles), Variant: badge.VariantGreen},
+						{Label: pageCtx.T("Fleet.Dashboard.Stats.InUse"), Value: fmt.Sprintf("%d", props.VehiclesInUse), Variant: badge.VariantYellow},
+						{Label: pageCtx.T("Fleet.Dashboard.Stats.Maintenance"), Value: fmt.Sprintf("%d", props.VehiclesMaintenance), Variant: badge.VariantPink},
+					},
+				})
+				@StatCard(StatCardProps{
+					Title:   pageCtx.T("Fleet.Dashboard.Stats.ActiveDrivers"),
+					Value:   fmt.Sprintf("%d", props.ActiveDrivers),
+					Icon:    icons.User(icons.Props{Size: "24"}),
+					Variant: badge.VariantGreen,
+				})
+				@StatCard(StatCardProps{
+					Title:   pageCtx.T("Fleet.Dashboard.Stats.UpcomingMaintenance"),
+					Value:   fmt.Sprintf("%d", props.UpcomingMaintenance),
+					Icon:    icons.Wrench(icons.Props{Size: "24"}),
+					Variant: badge.VariantYellow,
+				})
+				@StatCard(StatCardProps{
+					Title:   pageCtx.T("Fleet.Dashboard.Stats.FuelCostMonth"),
+					Value:   props.FuelCostMonth,
+					Icon:    icons.GasPump(icons.Props{Size: "24"}),
+					Variant: badge.VariantPurple,
+					SubStats: []SubStat{
+						{Label: pageCtx.T("Fleet.Dashboard.Stats.MaintenanceCost"), Value: props.MaintenanceCostMonth},
+						{Label: pageCtx.T("Fleet.Dashboard.Stats.TotalCost"), Value: props.TotalCostMonth},
+					},
+				})
+			</div>
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+				@card.Card(card.Props{
+					Header: card.DefaultHeader(pageCtx.T("Fleet.Dashboard.Charts.Utilization")),
+				}) {
+					<div class="h-80">
+						@charts.Chart(charts.Props{
+							Class:   "w-full h-full",
+							Options: props.UtilizationChart.Options,
+						})
+					</div>
+				}
+				@card.Card(card.Props{
+					Header: card.DefaultHeader(pageCtx.T("Fleet.Dashboard.Charts.CostTrends")),
+				}) {
+					<div class="h-80">
+						@charts.Chart(charts.Props{
+							Class:   "w-full h-full",
+							Options: props.CostTrendChart.Options,
+						})
+					</div>
+				}
+			</div>
+			<div class="flex gap-4">
+				@button.Primary(button.Props{
+					Size: button.SizeNormal,
+					Icon: icons.Download(icons.Props{Size: "16"}),
+					Attrs: templ.Attributes{
+						"hx-get":    "/fleet/dashboard/export?type=utilization",
+						"hx-target": "body",
+					},
+				}) {
+					{ pageCtx.T("Fleet.Dashboard.Actions.ExportUtilization") }
+				}
+				@button.Secondary(button.Props{
+					Size: button.SizeNormal,
+					Icon: icons.Download(icons.Props{Size: "16"}),
+					Attrs: templ.Attributes{
+						"hx-get":    "/fleet/dashboard/export?type=costs",
+						"hx-target": "body",
+					},
+				}) {
+					{ pageCtx.T("Fleet.Dashboard.Actions.ExportCosts") }
+				}
+			</div>
+		</div>
+	}
+}
+
+type SubStat struct {
+	Label   string
+	Value   string
+	Variant badge.Variant
+}
+
+type StatCardProps struct {
+	Title    string
+	Value    string
+	Icon     templ.Component
+	Variant  badge.Variant
+	SubStats []SubStat
+}
+
+templ StatCard(props StatCardProps) {
+	@card.Card(card.Props{}) {
+		<div class="flex items-start justify-between">
+			<div class="flex-1">
+				<p class="text-sm text-300 mb-1">{ props.Title }</p>
+				<p class="text-3xl font-bold text-200">{ props.Value }</p>
+				if len(props.SubStats) > 0 {
+					<div class="mt-3 space-y-2">
+						for _, stat := range props.SubStats {
+							<div class="flex items-center justify-between text-sm">
+								<span class="text-300">{ stat.Label }</span>
+								if stat.Variant != 0 {
+									@badge.New(badge.Props{
+										Size:    badge.SizeNormal,
+										Variant: stat.Variant,
+										Class:   templ.Classes("px-2"),
+									}) {
+										{ stat.Value }
+									}
+								} else {
+									<span class="font-medium text-200">{ stat.Value }</span>
+								}
+							</div>
+						}
+					</div>
+				}
+			</div>
+			<div class="ml-4">
+				@badge.New(badge.Props{
+					Size:    badge.SizeLG,
+					Variant: props.Variant,
+					Class:   templ.Classes("w-12 h-12"),
+				}) {
+					@props.Icon
+				}
+			</div>
+		</div>
+	}
+}

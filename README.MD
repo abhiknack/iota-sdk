@@ -71,6 +71,28 @@ various industries. Here's what's in the pipeline:
 
 ## 🛠️ Developer Tools
 
+### Code Generator
+
+IOTA SDK includes a powerful code generator to reduce boilerplate when creating new entities. Generate complete CRUD implementations with a single command.
+
+**Quick Start:**
+```bash
+# Generate complete CRUD (domain, repository, service, controller, DTOs)
+./scripts/generate.sh crud -m fleet -e Vehicle -f "Make:string:required,Model:string:required"
+
+# Generate migration file
+./scripts/generate.sh migration
+```
+
+**What gets generated:**
+- Domain aggregate (interface, implementation, events)
+- Repository (interface and PostgreSQL implementation)
+- Service layer with business logic
+- Controller with CRUD endpoints
+- DTOs with validation
+
+See [CODEGEN.md](CODEGEN.md) for quick reference or [docs/code-generation.md](docs/code-generation.md) for complete documentation.
+
 ### DevHub CLI
 
 DevHub is a powerful Terminal User Interface (TUI) for managing development services. It provides centralized control over all your project's services from a single interface.

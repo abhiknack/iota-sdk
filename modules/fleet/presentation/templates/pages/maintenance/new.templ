@@ -1,0 +1,163 @@
+package maintenance
+
+import (
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/card"
+	"github.com/iota-uz/iota-sdk/components/base/input"
+	"github.com/iota-uz/iota-sdk/components/base"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type CreatePageProps struct {
+	Maintenance        *viewmodels.MaintenanceFormViewModel
+	PostPath           string
+	VehicleOptions     []struct {
+		Value string
+		Label string
+	}
+	ServiceTypeOptions []struct {
+		Value     string
+		MessageID string
+	}
+}
+
+templ CreateForm(props *CreatePageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<form
+		class="flex flex-col justify-between h-full"
+		hx-post={ props.PostPath }
+		hx-swap="outerHTML"
+		hx-indicator="#save-btn"
+	>
+		@card.Card(card.Props{
+			Class:        "grid grid-cols-1 md:grid-cols-2 gap-4",
+			WrapperClass: "m-6",
+		}) {
+			<div class="md:col-span-2">
+				@base.Select(&base.SelectProps{
+					Label: pageCtx.T("Fleet.Maintenance.Single.Vehicle"),
+					Attrs: templ.Attributes{
+						"name":     "VehicleID",
+						"required": true,
+					},
+					Error: props.Maintenance.Errors["VehicleID"],
+				}) {
+					<option value="">{ pageCtx.T("Fleet.Maintenance.Single.SelectVehicle") }</option>
+					for _, option := range props.VehicleOptions {
+						<option value={ option.Value } selected?={ props.Maintenance.VehicleID == option.Value }>
+							{ option.Label }
+						</option>
+					}
+				}
+			</div>
+			@base.Select(&base.SelectProps{
+				Label: pageCtx.T("Fleet.Maintenance.Single.ServiceType"),
+				Attrs: templ.Attributes{
+					"name":     "ServiceType",
+					"required": true,
+				},
+				Error: props.Maintenance.Errors["ServiceType"],
+			}) {
+				<option value="">{ pageCtx.T("Fleet.Maintenance.Single.SelectServiceType") }</option>
+				for _, option := range props.ServiceTypeOptions {
+					<option value={ option.Value } selected?={ props.Maintenance.ServiceType == option.Value }>
+						{ pageCtx.T(option.MessageID) }
+					</option>
+				}
+			}
+			@input.Date(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.ServiceDate"),
+				Attrs: templ.Attributes{
+					"name":     "ServiceDate",
+					"value":    props.Maintenance.ServiceDate,
+					"required": true,
+				},
+				Error: props.Maintenance.Errors["ServiceDate"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.Odometer"),
+				Attrs: templ.Attributes{
+					"name":     "Odometer",
+					"value":    props.Maintenance.Odometer,
+					"min":      "0",
+					"required": true,
+				},
+				Error: props.Maintenance.Errors["Odometer"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.Cost"),
+				Attrs: templ.Attributes{
+					"name":     "Cost",
+					"value":    props.Maintenance.Cost,
+					"min":      "0",
+					"step":     "0.01",
+					"required": true,
+				},
+				Error: props.Maintenance.Errors["Cost"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.ServiceProvider"),
+				Attrs: templ.Attributes{
+					"name":  "ServiceProvider",
+					"value": props.Maintenance.ServiceProvider,
+				},
+				Error: props.Maintenance.Errors["ServiceProvider"],
+			})
+			@input.Date(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.NextServiceDue"),
+				Attrs: templ.Attributes{
+					"name":  "NextServiceDue",
+					"value": props.Maintenance.NextServiceDue,
+				},
+				Error: props.Maintenance.Errors["NextServiceDue"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.NextServiceOdometer"),
+				Attrs: templ.Attributes{
+					"name":  "NextServiceOdometer",
+					"value": props.Maintenance.NextServiceOdometer,
+					"min":   "0",
+				},
+				Error: props.Maintenance.Errors["NextServiceOdometer"],
+			})
+			<div class="md:col-span-2">
+				@input.TextArea(&input.TextAreaProps{
+					Label: pageCtx.T("Fleet.Maintenance.Single.Notes"),
+					Attrs: templ.Attributes{
+						"name":  "Description",
+						"value": props.Maintenance.Description,
+						"rows":  "4",
+					},
+					Error: props.Maintenance.Errors["Description"],
+				})
+			</div>
+		}
+		<div class="h-20 shadow-t-lg border-t w-full flex items-center justify-end px-8 bg-surface-300 border-t-primary mt-auto gap-4">
+			@button.Secondary(button.Props{
+				Size: button.SizeMD,
+				Href: "/fleet/maintenance",
+			}) {
+				{ pageCtx.T("Cancel") }
+			}
+			@button.Primary(button.Props{
+				Size: button.SizeMD,
+				Attrs: templ.Attributes{
+					"id": "save-btn",
+				},
+			}) {
+				{ pageCtx.T("Save") }
+			}
+		</div>
+	</form>
+}
+
+templ New(props *CreatePageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Maintenance.Meta.New.Title")},
+	}) {
+		@CreateForm(props)
+	}
+}

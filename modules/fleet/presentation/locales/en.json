@@ -1,0 +1,517 @@
+{
+  "NavigationLinks": {
+    "Fleet": "Fleet Management",
+    "FleetDashboard": "Dashboard",
+    "Vehicles": "Vehicles",
+    "Drivers": "Drivers",
+    "Trips": "Trips",
+    "Maintenance": "Maintenance",
+    "Fuel": "Fuel"
+  },
+  "Resources": {
+    "vehicle": "Vehicles",
+    "driver": "Drivers",
+    "trip": "Trips",
+    "maintenance": "Maintenance",
+    "fuel_entry": "Fuel Entries"
+  },
+  "Permissions": {
+    "Vehicle": {
+      "Create": "Create vehicles",
+      "Read": "View vehicles",
+      "Update": "Update vehicles",
+      "Delete": "Delete vehicles"
+    },
+    "Driver": {
+      "Create": "Create drivers",
+      "Read": "View drivers",
+      "Update": "Update drivers",
+      "Delete": "Delete drivers"
+    },
+    "Trip": {
+      "Create": "Create trips",
+      "Read": "View trips",
+      "Update": "Update trips",
+      "Delete": "Delete trips"
+    },
+    "Maintenance": {
+      "Create": "Create maintenance records",
+      "Read": "View maintenance records",
+      "Update": "Update maintenance records",
+      "Delete": "Delete maintenance records"
+    },
+    "FuelEntry": {
+      "Create": "Create fuel entries",
+      "Read": "View fuel entries",
+      "Update": "Update fuel entries",
+      "Delete": "Delete fuel entries"
+    }
+  },
+  "Fleet": {
+    "NavigationLinks": {
+      "Fleet": "Fleet Management",
+      "FleetDashboard": "Dashboard",
+      "Vehicles": "Vehicles",
+      "Drivers": "Drivers",
+      "Trips": "Trips",
+      "Maintenance": "Maintenance",
+      "Fuel": "Fuel"
+    },
+    "Dashboard": {
+      "Meta": {
+        "Title": "Fleet Dashboard"
+      },
+      "Title": "Fleet Dashboard",
+      "Subtitle": "Overview of your fleet operations",
+      "Stats": {
+        "TotalVehicles": "Total Vehicles",
+        "Active": "Active",
+        "InUse": "In Use",
+        "Maintenance": "Maintenance",
+        "ActiveDrivers": "Active Drivers",
+        "UpcomingMaintenance": "Upcoming Maintenance",
+        "FuelCostMonth": "Fuel Cost (This Month)",
+        "MaintenanceCost": "Maintenance Cost",
+        "TotalCost": "Total Cost"
+      },
+      "Charts": {
+        "Utilization": "Vehicle Utilization",
+        "CostTrends": "Cost Trends"
+      },
+      "Actions": {
+        "ExportUtilization": "Export Utilization Report",
+        "ExportCosts": "Export Cost Report"
+      }
+    },
+    "Vehicles": {
+    "Meta": {
+      "List": {
+        "Title": "Vehicles"
+      },
+      "New": {
+        "Title": "New Vehicle"
+      },
+      "Edit": {
+        "Title": "Edit Vehicle"
+      },
+      "Detail": {
+        "Title": "Vehicle Details"
+      }
+    },
+    "List": {
+      "New": "New Vehicle",
+      "Make": "Make",
+      "Model": "Model",
+      "Year": "Year",
+      "LicensePlate": "License Plate",
+      "Status": "Status",
+      "Odometer": "Odometer",
+      "RegistrationExpiry": "Registration Expiry",
+      "SearchMake": "Search by make",
+      "SearchModel": "Search by model",
+      "SearchLicensePlate": "Search by license plate",
+      "AllStatuses": "All Statuses",
+      "AllYears": "All Years",
+      "NoVehicles": {
+        "Title": "No vehicles found",
+        "Message": "Start by adding your first vehicle to the fleet"
+      }
+    },
+    "Single": {
+      "Make": "Make",
+      "Model": "Model",
+      "Year": "Year",
+      "VIN": "VIN",
+      "LicensePlate": "License Plate",
+      "CurrentOdometer": "Current Odometer (km)",
+      "RegistrationExpiry": "Registration Expiry",
+      "InsuranceExpiry": "Insurance Expiry",
+      "Delete": "Delete Vehicle",
+      "DeleteConfirmation": "Are you sure you want to delete this vehicle? This action cannot be undone."
+    },
+    "Detail": {
+      "ChangeStatus": "Change Status",
+      "Tabs": {
+        "Info": "Information",
+        "Trips": "Trips",
+        "Maintenance": "Maintenance",
+        "Fuel": "Fuel"
+      },
+      "TripsComingSoon": "Trip history will be displayed here",
+      "MaintenanceComingSoon": "Maintenance records will be displayed here",
+      "FuelComingSoon": "Fuel entries will be displayed here"
+    }
+  },
+  "Drivers": {
+    "Meta": {
+      "List": {
+        "Title": "Drivers"
+      },
+      "New": {
+        "Title": "New Driver"
+      },
+      "Edit": {
+        "Title": "Edit Driver"
+      },
+      "Detail": {
+        "Title": "Driver Details"
+      }
+    },
+    "List": {
+      "New": "New Driver",
+      "FullName": "Full Name",
+      "LicenseNumber": "License Number",
+      "LicenseExpiry": "License Expiry",
+      "Phone": "Phone",
+      "Email": "Email",
+      "Status": "Status",
+      "SearchFirstName": "Search by first name",
+      "SearchLastName": "Search by last name",
+      "SearchLicenseNumber": "Search by license number",
+      "AllStatuses": "All Statuses",
+      "ExpiringLicense": "Expiring Soon",
+      "NoDrivers": {
+        "Title": "No drivers found",
+        "Message": "Start by adding your first driver to the fleet"
+      }
+    },
+    "Single": {
+      "FirstName": "First Name",
+      "LastName": "Last Name",
+      "LicenseNumber": "License Number",
+      "LicenseExpiry": "License Expiry",
+      "Phone": "Phone",
+      "Email": "Email",
+      "Delete": "Delete Driver",
+      "DeleteConfirmation": "Are you sure you want to delete this driver? This action cannot be undone."
+    },
+    "Detail": {
+      "TotalTrips": "Total Trips",
+      "ActiveTrips": "Active Trips",
+      "AssignmentsComingSoon": "Vehicle assignments will be displayed here",
+      "NoTrips": "No trips found for this driver",
+      "Tabs": {
+        "Info": "Information",
+        "Assignments": "Assignments",
+        "Trips": "Trips"
+      },
+      "Trips": {
+        "Vehicle": "Vehicle",
+        "Origin": "Origin",
+        "Destination": "Destination",
+        "StartTime": "Start Time",
+        "Status": "Status",
+        "Distance": "Distance"
+      }
+    }
+  },
+  "Maintenance": {
+    "Meta": {
+      "List": {
+        "Title": "Maintenance"
+      },
+      "New": {
+        "Title": "New Maintenance"
+      },
+      "Edit": {
+        "Title": "Edit Maintenance"
+      }
+    },
+    "List": {
+      "New": "New Maintenance",
+      "Vehicle": "Vehicle",
+      "ServiceType": "Service Type",
+      "ServiceDate": "Service Date",
+      "Odometer": "Odometer",
+      "Cost": "Cost",
+      "NextServiceDue": "Next Service Due",
+      "Due": "Due",
+      "SearchVehicle": "Search by vehicle",
+      "SearchProvider": "Search by provider",
+      "AllServiceTypes": "All Service Types",
+      "NoMaintenance": {
+        "Title": "No maintenance records found",
+        "Message": "Start by adding your first maintenance record"
+      }
+    },
+    "Single": {
+      "Vehicle": "Vehicle",
+      "SelectVehicle": "Select Vehicle",
+      "ServiceType": "Service Type",
+      "SelectServiceType": "Select Service Type",
+      "ServiceDate": "Service Date",
+      "Odometer": "Odometer (km)",
+      "Cost": "Cost",
+      "ServiceProvider": "Service Provider",
+      "Notes": "Notes",
+      "NextServiceDue": "Next Service Due",
+      "NextServiceOdometer": "Next Service Odometer (km)",
+      "Delete": "Delete Maintenance",
+      "DeleteConfirmation": "Are you sure you want to delete this maintenance record? This action cannot be undone."
+    }
+  },
+  "Trips": {
+    "Meta": {
+      "List": {
+        "Title": "Trips"
+      },
+      "New": {
+        "Title": "New Trip"
+      },
+      "Detail": {
+        "Title": "Trip Details"
+      }
+    },
+    "List": {
+      "New": "New Trip",
+      "Vehicle": "Vehicle",
+      "Driver": "Driver",
+      "Origin": "Origin",
+      "Destination": "Destination",
+      "StartTime": "Start Time",
+      "Status": "Status",
+      "Distance": "Distance",
+      "SearchOrigin": "Search by origin",
+      "SearchDestination": "Search by destination",
+      "AllVehicles": "All Vehicles",
+      "AllDrivers": "All Drivers",
+      "AllStatuses": "All Statuses",
+      "NoTrips": {
+        "Title": "No trips found",
+        "Message": "Start by scheduling your first trip"
+      }
+    },
+    "Single": {
+      "Vehicle": "Vehicle",
+      "Driver": "Driver",
+      "Origin": "Origin",
+      "Destination": "Destination",
+      "Purpose": "Purpose",
+      "StartTime": "Start Time",
+      "EndTime": "End Time",
+      "StartOdometer": "Start Odometer (km)",
+      "EndOdometer": "End Odometer (km)",
+      "Status": "Status",
+      "Distance": "Distance",
+      "Duration": "Duration",
+      "AverageSpeed": "Average Speed",
+      "CompleteTrip": "Complete Trip",
+      "CancelTrip": "Cancel Trip",
+      "CancelReason": "Cancellation Reason"
+    },
+    "Detail": {
+      "TripInfo": "Trip Information",
+      "Statistics": "Statistics",
+      "Actions": "Actions"
+    },
+    "Form": {
+      "ConflictDetected": "Conflict Detected",
+      "ConflictMessage": "The selected vehicle is not available for the specified time period"
+    }
+  },
+  "Fuel": {
+    "Meta": {
+      "List": {
+        "Title": "Fuel Entries"
+      },
+      "New": {
+        "Title": "New Fuel Entry"
+      },
+      "Edit": {
+        "Title": "Edit Fuel Entry"
+      }
+    },
+    "List": {
+      "New": "New Fuel Entry",
+      "Vehicle": "Vehicle",
+      "Driver": "Driver",
+      "Date": "Date",
+      "Quantity": "Quantity",
+      "Cost": "Cost",
+      "Odometer": "Odometer",
+      "FuelType": "Fuel Type",
+      "Efficiency": "Efficiency",
+      "SearchLocation": "Search by location",
+      "AllVehicles": "All Vehicles",
+      "AllFuelTypes": "All Fuel Types",
+      "NoFuelEntries": {
+        "Title": "No fuel entries found",
+        "Message": "Start by adding your first fuel entry"
+      }
+    },
+    "Single": {
+      "Vehicle": "Vehicle",
+      "SelectVehicle": "Select Vehicle",
+      "Driver": "Driver (Optional)",
+      "SelectDriver": "Select Driver",
+      "Date": "Date",
+      "FuelType": "Fuel Type",
+      "SelectFuelType": "Select Fuel Type",
+      "Quantity": "Quantity (L)",
+      "Cost": "Cost",
+      "Odometer": "Odometer (km)",
+      "Location": "Location",
+      "Efficiency": "Efficiency (km/L)",
+      "Delete": "Delete Fuel Entry",
+      "DeleteConfirmation": "Are you sure you want to delete this fuel entry? This action cannot be undone."
+    }
+  },
+  "Enums": {
+    "VehicleStatus": {
+      "Available": "Available",
+      "InUse": "In Use",
+      "Maintenance": "Maintenance",
+      "OutOfService": "Out of Service",
+      "Retired": "Retired"
+    },
+    "DriverStatus": {
+      "Active": "Active",
+      "Inactive": "Inactive",
+      "OnLeave": "On Leave",
+      "Terminated": "Terminated"
+    },
+    "TripStatus": {
+      "Scheduled": "Scheduled",
+      "InProgress": "In Progress",
+      "Completed": "Completed",
+      "Cancelled": "Cancelled"
+    },
+    "ServiceType": {
+      "OilChange": "Oil Change",
+      "TireRotation": "Tire Rotation",
+      "BrakeService": "Brake Service",
+      "Inspection": "Inspection",
+      "Repair": "Repair",
+      "Other": "Other"
+    },
+    "FuelType": {
+      "Gasoline": "Gasoline",
+      "Diesel": "Diesel",
+      "Electric": "Electric",
+      "Hybrid": "Hybrid",
+      "CNG": "CNG"
+    }
+  },
+  "Validation": {
+    "Required": "This field is required",
+    "InvalidFormat": "Invalid format",
+    "InvalidDate": "Invalid date",
+    "InvalidNumber": "Invalid number",
+    "InvalidEmail": "Invalid email address",
+    "InvalidPhone": "Invalid phone number",
+    "MinLength": "Minimum length is {0} characters",
+    "MaxLength": "Maximum length is {0} characters",
+    "MinValue": "Minimum value is {0}",
+    "MaxValue": "Maximum value is {0}",
+    "FutureDate": "Date must be in the future",
+    "PastDate": "Date must be in the past",
+    "InvalidVIN": "VIN must be 17 characters",
+    "InvalidOdometer": "Odometer reading must be greater than previous reading",
+    "InvalidYear": "Year must be between 1900 and current year",
+    "LicenseExpired": "License has expired",
+    "RegistrationExpired": "Registration has expired",
+    "InsuranceExpired": "Insurance has expired"
+  },
+  "Errors": {
+    "VehicleNotFound": "Vehicle not found",
+    "DriverNotFound": "Driver not found",
+    "TripNotFound": "Trip not found",
+    "MaintenanceNotFound": "Maintenance record not found",
+    "FuelEntryNotFound": "Fuel entry not found",
+    "VehicleNotAvailable": "Vehicle is not available for the selected time period",
+    "DriverNotAvailable": "Driver is not available for the selected time period",
+    "InvalidStatusTransition": "Invalid status transition",
+    "TripConflict": "Trip conflicts with existing schedule",
+    "ExpiredLicense": "Driver license has expired",
+    "InvalidOdometerReading": "Odometer reading is invalid or less than previous reading",
+    "CannotDeleteVehicle": "Cannot delete vehicle with active trips or maintenance records",
+    "CannotDeleteDriver": "Cannot delete driver with active trips",
+    "CannotCompleteTrip": "Cannot complete trip without end odometer reading",
+    "CannotCancelTrip": "Cannot cancel completed trip",
+    "MaintenanceDue": "Maintenance is due for this vehicle",
+    "FuelAnomalyDetected": "Fuel efficiency anomaly detected",
+    "UnexpectedError": "An unexpected error occurred. Please try again.",
+    "PermissionDenied": "You do not have permission to perform this action",
+    "InvalidDateRange": "End date must be after start date"
+  },
+  "Messages": {
+    "VehicleCreated": "Vehicle created successfully",
+    "VehicleUpdated": "Vehicle updated successfully",
+    "VehicleDeleted": "Vehicle deleted successfully",
+    "VehicleStatusChanged": "Vehicle status changed successfully",
+    "DriverCreated": "Driver created successfully",
+    "DriverUpdated": "Driver updated successfully",
+    "DriverDeleted": "Driver deleted successfully",
+    "TripCreated": "Trip created successfully",
+    "TripUpdated": "Trip updated successfully",
+    "TripCompleted": "Trip completed successfully",
+    "TripCancelled": "Trip cancelled successfully",
+    "TripDeleted": "Trip deleted successfully",
+    "MaintenanceCreated": "Maintenance record created successfully",
+    "MaintenanceUpdated": "Maintenance record updated successfully",
+    "MaintenanceDeleted": "Maintenance record deleted successfully",
+    "FuelEntryCreated": "Fuel entry created successfully",
+    "FuelEntryUpdated": "Fuel entry updated successfully",
+    "FuelEntryDeleted": "Fuel entry deleted successfully",
+    "ReportExported": "Report exported successfully",
+    "ConfirmDelete": "Are you sure you want to delete this item?",
+    "NoChanges": "No changes were made",
+    "SaveChanges": "Save changes?",
+    "UnsavedChanges": "You have unsaved changes. Do you want to leave?"
+  },
+  "Actions": {
+    "Create": "Create",
+    "Update": "Update",
+    "Delete": "Delete",
+    "Cancel": "Cancel",
+    "Save": "Save",
+    "Edit": "Edit",
+    "View": "View",
+    "Back": "Back",
+    "Close": "Close",
+    "Confirm": "Confirm",
+    "Search": "Search",
+    "Filter": "Filter",
+    "Reset": "Reset",
+    "Export": "Export",
+    "Import": "Import",
+    "Refresh": "Refresh",
+    "Submit": "Submit",
+    "Clear": "Clear",
+    "Apply": "Apply",
+    "SelectAll": "Select All",
+    "DeselectAll": "Deselect All"
+  },
+  "Common": {
+    "Loading": "Loading...",
+    "NoData": "No data available",
+    "NoResults": "No results found",
+    "Page": "Page",
+    "Of": "of",
+    "PerPage": "Per page",
+    "Total": "Total",
+    "From": "From",
+    "To": "To",
+    "Date": "Date",
+    "Time": "Time",
+    "Status": "Status",
+    "Actions": "Actions",
+    "Details": "Details",
+    "Yes": "Yes",
+    "No": "No",
+    "All": "All",
+    "None": "None",
+    "Optional": "Optional",
+    "Required": "Required",
+    "Select": "Select",
+    "Selected": "Selected",
+    "Today": "Today",
+    "Yesterday": "Yesterday",
+    "Tomorrow": "Tomorrow",
+    "ThisWeek": "This Week",
+    "ThisMonth": "This Month",
+    "ThisYear": "This Year",
+    "Custom": "Custom"
+  }
+  }
+}

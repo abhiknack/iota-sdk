@@ -1,0 +1,209 @@
+package drivers
+
+import (
+	"fmt"
+	icons "github.com/iota-uz/icons/phosphor"
+	"github.com/iota-uz/iota-sdk/components/base"
+	"github.com/iota-uz/iota-sdk/components/base/badge"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/navtabs"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type DetailPageProps struct {
+	Driver *viewmodels.DriverDetailViewModel
+	Trips  []viewmodels.TripListViewModel
+}
+
+templ DriverInfo(driver *viewmodels.DriverDetailViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+		<div class="space-y-4">
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Drivers.Single.FirstName") }</label>
+				<p class="mt-1 text-base">{ driver.FirstName }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Drivers.Single.LastName") }</label>
+				<p class="mt-1 text-base">{ driver.LastName }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Drivers.Single.LicenseNumber") }</label>
+				<p class="mt-1 text-base font-mono">{ driver.LicenseNumber }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Drivers.Single.LicenseExpiry") }</label>
+				<div class="mt-1 flex items-center gap-2">
+					<div x-data="relativeformat">
+						<span x-text={ fmt.Sprintf("format('%s')", driver.LicenseExpiry) }></span>
+					</div>
+					if driver.LicenseExpiryWarning {
+						@badge.New(badge.Props{
+							Size:    badge.SizeNormal,
+							Variant: badge.VariantYellow,
+						}) {
+							@icons.Warning(icons.Props{Size: "16"})
+							{ pageCtx.T("Fleet.Drivers.List.ExpiringLicense") }
+						}
+					}
+				</div>
+			</div>
+		</div>
+		<div class="space-y-4">
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Drivers.Single.Phone") }</label>
+				<p class="mt-1 text-base">{ driver.Phone }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Drivers.Single.Email") }</label>
+				<p class="mt-1 text-base">{ driver.Email }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Drivers.List.Status") }</label>
+				<div class="mt-1">
+					@badge.New(badge.Props{
+						Size:    badge.SizeNormal,
+						Variant: badge.Variant(driver.StatusBadgeVariant),
+					}) {
+						{ pageCtx.T(fmt.Sprintf("Fleet.Enums.DriverStatus.%s", driver.Status)) }
+					}
+				</div>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Drivers.Detail.TotalTrips") }</label>
+				<p class="mt-1 text-base">{ fmt.Sprintf("%d", driver.TotalTrips) }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Drivers.Detail.ActiveTrips") }</label>
+				<p class="mt-1 text-base">{ fmt.Sprintf("%d", driver.ActiveTrips) }</p>
+			</div>
+		</div>
+	</div>
+}
+
+templ DriverAssignments(driver *viewmodels.DriverDetailViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="space-y-4">
+		<p class="text-sm text-200">{ pageCtx.T("Fleet.Drivers.Detail.AssignmentsComingSoon") }</p>
+	</div>
+}
+
+templ DriverTrips(trips []viewmodels.TripListViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="space-y-4">
+		if len(trips) == 0 {
+			<p class="text-sm text-200">{ pageCtx.T("Fleet.Drivers.Detail.NoTrips") }</p>
+		} else {
+			@base.Table(base.TableProps{
+				Columns: []*base.TableColumn{
+					{Label: pageCtx.T("Fleet.Drivers.Detail.Trips.Vehicle"), Key: "vehicle"},
+					{Label: pageCtx.T("Fleet.Drivers.Detail.Trips.Origin"), Key: "origin"},
+					{Label: pageCtx.T("Fleet.Drivers.Detail.Trips.Destination"), Key: "destination"},
+					{Label: pageCtx.T("Fleet.Drivers.Detail.Trips.StartTime"), Key: "startTime"},
+					{Label: pageCtx.T("Fleet.Drivers.Detail.Trips.Status"), Key: "status"},
+					{Label: pageCtx.T("Fleet.Drivers.Detail.Trips.Distance"), Key: "distance"},
+				},
+			}) {
+				for _, trip := range trips {
+					@base.TableRow(base.TableRowProps{}) {
+						@base.TableCell(base.TableCellProps{}) {
+							{ trip.VehicleName }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ trip.Origin }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ trip.Destination }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							<div x-data="relativeformat">
+								<span x-text={ fmt.Sprintf("format('%s')", trip.StartTime) }></span>
+							</div>
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							@badge.New(badge.Props{
+								Size:    badge.SizeNormal,
+								Variant: badge.Variant(trip.StatusBadgeVariant),
+							}) {
+								{ pageCtx.T(fmt.Sprintf("Fleet.Enums.TripStatus.%s", trip.Status)) }
+							}
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							if trip.Distance > 0 {
+								{ fmt.Sprintf("%d km", trip.Distance) }
+							} else {
+								<span class="text-200">-</span>
+							}
+						}
+					}
+				}
+			}
+		}
+	</div>
+}
+
+templ DetailContent(props *DetailPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="m-6">
+		<div class="flex items-center justify-between mb-5">
+			<div>
+				<h1 class="text-2xl font-medium">
+					{ props.Driver.FullName }
+				</h1>
+				<p class="text-sm text-200 mt-1">{ props.Driver.LicenseNumber }</p>
+			</div>
+			<div class="flex gap-3">
+				@button.Secondary(button.Props{
+					Size: button.SizeNormal,
+					Href: fmt.Sprintf("/fleet/drivers/%s/edit", props.Driver.ID),
+					Icon: icons.PencilSimple(icons.Props{Size: "18"}),
+				}) {
+					{ pageCtx.T("Edit") }
+				}
+			</div>
+		</div>
+		<div class="bg-surface-600 border border-primary rounded-lg p-6">
+			@navtabs.Root(navtabs.Props{
+				DefaultValue: "info",
+			}) {
+				@navtabs.List("") {
+					@navtabs.Button("info") {
+						{ pageCtx.T("Fleet.Drivers.Detail.Tabs.Info") }
+					}
+					@navtabs.Button("assignments") {
+						{ pageCtx.T("Fleet.Drivers.Detail.Tabs.Assignments") }
+					}
+					@navtabs.Button("trips") {
+						{ pageCtx.T("Fleet.Drivers.Detail.Tabs.Trips") }
+					}
+				}
+				@navtabs.Content("info") {
+					<div class="mt-6">
+						@DriverInfo(props.Driver)
+					</div>
+				}
+				@navtabs.Content("assignments") {
+					<div class="mt-6">
+						@DriverAssignments(props.Driver)
+					</div>
+				}
+				@navtabs.Content("trips") {
+					<div class="mt-6">
+						@DriverTrips(props.Trips)
+					</div>
+				}
+			}
+		</div>
+	</div>
+}
+
+templ Detail(props *DetailPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Drivers.Meta.Detail.Title")},
+	}) {
+		@DetailContent(props)
+	}
+}

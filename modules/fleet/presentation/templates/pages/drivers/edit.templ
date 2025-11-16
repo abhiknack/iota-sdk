@@ -1,0 +1,174 @@
+package drivers
+
+import (
+	"fmt"
+	icons "github.com/iota-uz/icons/phosphor"
+	"github.com/iota-uz/iota-sdk/components/base"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/card"
+	"github.com/iota-uz/iota-sdk/components/base/dialog"
+	"github.com/iota-uz/iota-sdk/components/base/input"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type EditPageProps struct {
+	Driver        *viewmodels.DriverFormViewModel
+	StatusOptions []struct {
+		Value     string
+		MessageID string
+	}
+}
+
+templ EditForm(props *EditPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="flex flex-col justify-between h-full" id="edit-content">
+		@card.Card(card.Props{
+			Class:        "grid grid-cols-1 md:grid-cols-2 gap-4",
+			WrapperClass: "m-6",
+		}) {
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Drivers.Single.FirstName"),
+				Attrs: templ.Attributes{
+					"name":     "FirstName",
+					"value":    props.Driver.FirstName,
+					"form":     "save-form",
+					"required": true,
+				},
+				Error: props.Driver.Errors["FirstName"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Drivers.Single.LastName"),
+				Attrs: templ.Attributes{
+					"name":     "LastName",
+					"value":    props.Driver.LastName,
+					"form":     "save-form",
+					"required": true,
+				},
+				Error: props.Driver.Errors["LastName"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Drivers.Single.LicenseNumber"),
+				Attrs: templ.Attributes{
+					"name":     "LicenseNumber",
+					"value":    props.Driver.LicenseNumber,
+					"form":     "save-form",
+					"required": true,
+				},
+				Error: props.Driver.Errors["LicenseNumber"],
+			})
+			@input.Date(&input.Props{
+				Label: pageCtx.T("Fleet.Drivers.Single.LicenseExpiry"),
+				Attrs: templ.Attributes{
+					"name":     "LicenseExpiry",
+					"value":    props.Driver.LicenseExpiry,
+					"form":     "save-form",
+					"required": true,
+				},
+				Error: props.Driver.Errors["LicenseExpiry"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Drivers.Single.Phone"),
+				Attrs: templ.Attributes{
+					"name":  "Phone",
+					"value": props.Driver.Phone,
+					"form":  "save-form",
+					"type":  "tel",
+				},
+				Error: props.Driver.Errors["Phone"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Drivers.Single.Email"),
+				Attrs: templ.Attributes{
+					"name":  "Email",
+					"value": props.Driver.Email,
+					"form":  "save-form",
+					"type":  "email",
+				},
+				Error: props.Driver.Errors["Email"],
+			})
+			<div class="md:col-span-2">
+				@base.Select(&base.SelectProps{
+					Label: pageCtx.T("Fleet.Drivers.List.Status"),
+					Attrs: templ.Attributes{
+						"name":     "Status",
+						"form":     "save-form",
+						"required": true,
+					},
+					Error: props.Driver.Errors["Status"],
+				}) {
+					for _, option := range props.StatusOptions {
+						<option value={ option.Value } selected?={ props.Driver.Status == option.Value }>
+							{ pageCtx.T(option.MessageID) }
+						</option>
+					}
+				}
+			</div>
+		}
+		<div x-data class="h-20 shadow-t-lg border-t w-full flex items-center justify-end px-8 bg-surface-300 border-t-primary mt-auto gap-4">
+			<form
+				id="delete-form"
+				hx-post={ fmt.Sprintf("/fleet/drivers/%s/delete", props.Driver.ID) }
+				hx-trigger="submit"
+				hx-target="closest .content"
+				hx-swap="innerHTML"
+				hx-indicator="#delete-driver-btn"
+				hx-disabled-elt="find button"
+			>
+				@button.Danger(button.Props{
+					Size: button.SizeMD,
+					Attrs: templ.Attributes{
+						"type":   "button",
+						"@click": "$dispatch('open-delete-driver-confirmation')",
+						"id":     "delete-driver-btn",
+					},
+				}) {
+					{ pageCtx.T("Delete") }
+				}
+			</form>
+			<form
+				id="save-form"
+				method="post"
+				hx-post={ fmt.Sprintf("/fleet/drivers/%s", props.Driver.ID) }
+				hx-indicator="#save-btn"
+				hx-target="#edit-content"
+				hx-swap="outerHTML"
+			>
+				@button.Primary(button.Props{
+					Size: button.SizeMD,
+					Attrs: templ.Attributes{
+						"id": "save-btn",
+					},
+				}) {
+					{ pageCtx.T("Save") }
+				}
+			</form>
+		</div>
+	</div>
+}
+
+templ Edit(props *EditPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Drivers.Meta.Edit.Title")},
+	}) {
+		@EditForm(props)
+		@dialog.Confirmation(&dialog.Props{
+			CancelText:  pageCtx.T("Cancel"),
+			ConfirmText: pageCtx.T("Delete"),
+			Heading:     pageCtx.T("Fleet.Drivers.Single.Delete"),
+			Text:        pageCtx.T("Fleet.Drivers.Single.DeleteConfirmation"),
+			Icon:        icons.Trash(icons.Props{Size: "20"}),
+			Action:      "open-delete-driver-confirmation",
+			Attrs: templ.Attributes{
+				"@closing": `({target}) => {
+					if (target.returnValue === "confirm") {
+						let deleteForm = document.getElementById("delete-form");
+						htmx.trigger(deleteForm, "submit");
+					}
+				}`,
+			},
+		})
+	}
+}

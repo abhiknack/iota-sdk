@@ -1,0 +1,18 @@
+package viewmodels
+
+import (
+	"github.com/iota-uz/iota-sdk/components/base/layout"
+	"github.com/iota-uz/iota-sdk/modules/studio/presentation/templates/pages/modules"
+)
+
+templ ModuleListPage(vm *ModuleListViewModel) {
+	@layout.App(vm.PageCtx, vm.PageCtx.T("Studio.Meta.Title")) {
+		@modules.ModuleList(vm)
+	}
+}
+
+templ ModuleDetailPage(vm *ModuleDetailViewModel) {
+	@layout.App(vm.PageCtx, vm.Module.DisplayName) {
+		@modules.ModuleDetail(vm)
+	}
+}

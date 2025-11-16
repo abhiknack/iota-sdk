@@ -1,0 +1,154 @@
+package trips
+
+import (
+	icons "github.com/iota-uz/icons/phosphor"
+	"github.com/iota-uz/iota-sdk/components/base"
+	"github.com/iota-uz/iota-sdk/components/base/alert"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/card"
+	"github.com/iota-uz/iota-sdk/components/base/input"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type CreatePageProps struct {
+	Trip     *viewmodels.TripFormViewModel
+	PostPath string
+}
+
+templ CreateForm(props *CreatePageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<form
+		class="flex flex-col justify-between h-full"
+		hx-post={ props.PostPath }
+		hx-swap="outerHTML"
+		hx-indicator="#save-btn"
+	>
+		if props.Trip.HasConflict {
+			<div class="m-6 mb-0">
+				@alert.Error() {
+					<div class="flex items-center gap-2">
+						@icons.Warning(icons.Props{Size: "20"})
+						<div>
+							<div class="font-semibold">{ pageCtx.T("Fleet.Trips.Form.ConflictDetected") }</div>
+							<div class="text-sm">{ props.Trip.ConflictMsg }</div>
+						</div>
+					</div>
+				}
+			</div>
+		}
+		@card.Card(card.Props{
+			Class:        "grid grid-cols-1 md:grid-cols-2 gap-4",
+			WrapperClass: "m-6",
+		}) {
+			<div class="md:col-span-2">
+				@base.Select(&base.SelectProps{
+					Label: pageCtx.T("Fleet.Trips.Single.Vehicle"),
+					Error: props.Trip.Errors["VehicleID"],
+					Attrs: templ.Attributes{
+						"name":     "VehicleID",
+						"required": true,
+					},
+				}) {
+					<option value="">{ pageCtx.T("SelectOption") }</option>
+					for _, vehicle := range props.Trip.Vehicles {
+						<option value={ vehicle.ID } selected?={ vehicle.ID == props.Trip.VehicleID }>
+							{ vehicle.Label }
+						</option>
+					}
+				}
+			</div>
+			<div class="md:col-span-2">
+				@base.Select(&base.SelectProps{
+					Label: pageCtx.T("Fleet.Trips.Single.Driver"),
+					Error: props.Trip.Errors["DriverID"],
+					Attrs: templ.Attributes{
+						"name":     "DriverID",
+						"required": true,
+					},
+				}) {
+					<option value="">{ pageCtx.T("SelectOption") }</option>
+					for _, driver := range props.Trip.Drivers {
+						<option value={ driver.ID } selected?={ driver.ID == props.Trip.DriverID }>
+							{ driver.Label }
+						</option>
+					}
+				}
+			</div>
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Trips.Single.Origin"),
+				Attrs: templ.Attributes{
+					"name":     "Origin",
+					"value":    props.Trip.Origin,
+					"required": true,
+				},
+				Error: props.Trip.Errors["Origin"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Trips.Single.Destination"),
+				Attrs: templ.Attributes{
+					"name":     "Destination",
+					"value":    props.Trip.Destination,
+					"required": true,
+				},
+				Error: props.Trip.Errors["Destination"],
+			})
+			<div class="md:col-span-2">
+				@input.TextArea(&input.TextAreaProps{
+					Label: pageCtx.T("Fleet.Trips.Single.Purpose"),
+					Attrs: templ.Attributes{
+						"name":  "Purpose",
+						"value": props.Trip.Purpose,
+						"rows":  "3",
+					},
+					Error: props.Trip.Errors["Purpose"],
+				})
+			</div>
+			@input.DateTime(&input.Props{
+				Label: pageCtx.T("Fleet.Trips.Single.StartTime"),
+				Attrs: templ.Attributes{
+					"name":     "StartTime",
+					"value":    props.Trip.StartTime,
+					"required": true,
+				},
+				Error: props.Trip.Errors["StartTime"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Trips.Single.StartOdometer"),
+				Attrs: templ.Attributes{
+					"name":     "StartOdometer",
+					"value":    props.Trip.StartOdometer,
+					"min":      "0",
+					"required": true,
+				},
+				Error: props.Trip.Errors["StartOdometer"],
+			})
+		}
+		<div class="h-20 shadow-t-lg border-t w-full flex items-center justify-end px-8 bg-surface-300 border-t-primary mt-auto gap-4">
+			@button.Secondary(button.Props{
+				Size: button.SizeMD,
+				Href: "/fleet/trips",
+			}) {
+				{ pageCtx.T("Cancel") }
+			}
+			@button.Primary(button.Props{
+				Size: button.SizeMD,
+				Attrs: templ.Attributes{
+					"id": "save-btn",
+				},
+			}) {
+				{ pageCtx.T("Save") }
+			}
+		</div>
+	</form>
+}
+
+templ New(props *CreatePageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Trips.Meta.New.Title")},
+	}) {
+		@CreateForm(props)
+	}
+}

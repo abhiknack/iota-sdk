@@ -87,7 +87,8 @@
     "user": "Users",
     "role": "Roles",
     "group": "Groups",
-    "upload": "Uploads"
+    "upload": "Uploads",
+    "Fleet": "Fleet Management"
   },
   "Permissions": {
     "User": {
@@ -559,6 +560,48 @@
         "Label": "Manage Employees",
         "_Description": "Full employee management capabilities"
       }
+    },
+    "Fleet": {
+      "VehicleView": {
+        "Label": "View Vehicles",
+        "_Description": "View vehicle information only"
+      },
+      "VehicleManage": {
+        "Label": "Manage Vehicles",
+        "_Description": "Full vehicle management capabilities"
+      },
+      "DriverView": {
+        "Label": "View Drivers",
+        "_Description": "View driver information only"
+      },
+      "DriverManage": {
+        "Label": "Manage Drivers",
+        "_Description": "Full driver management capabilities"
+      },
+      "TripView": {
+        "Label": "View Trips",
+        "_Description": "View trip information only"
+      },
+      "TripManage": {
+        "Label": "Manage Trips",
+        "_Description": "Full trip management capabilities"
+      },
+      "MaintenanceView": {
+        "Label": "View Maintenance",
+        "_Description": "View maintenance information only"
+      },
+      "MaintenanceManage": {
+        "Label": "Manage Maintenance",
+        "_Description": "Full maintenance management capabilities"
+      },
+      "FuelEntryView": {
+        "Label": "View Fuel Entries",
+        "_Description": "View fuel entry information only"
+      },
+      "FuelEntryManage": {
+        "Label": "Manage Fuel Entries",
+        "_Description": "Full fuel entry management capabilities"
+      }
     }
   },
   "Modules": {
@@ -567,7 +610,8 @@
     "Projects": "Projects",
     "Warehouse": "Warehouse",
     "CRM": "CRM",
-    "HRM": "HR Management"
+    "HRM": "HR Management",
+    "Fleet": "Fleet Management"
   },
   "Countries": {
     "AF": "Afghanistan",

@@ -1,0 +1,52 @@
+{
+  "Studio": {
+    "NavigationLinks": {
+      "Dashboard": "Modul studiyasi",
+      "Modules": "Modullar"
+    },
+    "Meta": {
+      "Title": "Modul studiyasi"
+    },
+    "Modules": {
+      "Title": "Modul ta'riflari",
+      "CreateNew": "Modul yaratish",
+      "Edit": "Modulni tahrirlash",
+      "View": "Tafsilotlarni ko'rish",
+      "Name": "Modul nomi",
+      "NamePlaceholder": "masalan, fleet, crm, warehouse",
+      "DisplayName": "Ko'rsatiladigan nom",
+      "DisplayNamePlaceholder": "masalan, Avtomobil parkini boshqarish",
+      "Description": "Tavsif",
+      "DescriptionPlaceholder": "Bu modul nima qilishini tasvirlab bering",
+      "Icon": "Belgi (Emoji)",
+      "Entities": "Ob'ektlar",
+      "DeleteConfirm": "Ushbu modulni o'chirishga ishonchingiz komilmi?",
+      "Generate": "Kod yaratish",
+      "GenerateConfirm": "Bu modul uchun barcha kod fayllarini yaratadi. Davom ettirilsinmi?"
+    },
+    "Entities": {
+      "Title": "Ob'ektlar",
+      "AddNew": "Ob'ekt qo'shish",
+      "Builder": "Ob'ekt quruvchisi",
+      "NoEntities": "Hali ob'ektlar aniqlanmagan",
+      "AddFirstEntity": "Boshlash uchun birinchi ob'ektingizni qo'shing",
+      "DeleteConfirm": "Ushbu ob'ektni olib tashlashga ishonchingiz komilmi?"
+    },
+    "Fields": {
+      "Title": "Maydonlar",
+      "AddField": "Maydon qo'shish",
+      "Name": "Maydon nomi",
+      "Type": "Turi",
+      "Required": "Majburiy",
+      "Validation": "Tekshirish qoidalari"
+    },
+    "Messages": {
+      "ModuleCreated": "Modul muvaffaqiyatli yaratildi",
+      "ModuleUpdated": "Modul muvaffaqiyatli yangilandi",
+      "ModuleDeleted": "Modul muvaffaqiyatli o'chirildi",
+      "ModuleGenerated": "Modul kodi muvaffaqiyatli yaratildi",
+      "EntityAdded": "Ob'ekt muvaffaqiyatli qo'shildi",
+      "EntityRemoved": "Ob'ekt muvaffaqiyatli olib tashlandi"
+    }
+  }
+}

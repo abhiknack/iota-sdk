@@ -1,0 +1,52 @@
+{
+  "Studio": {
+    "NavigationLinks": {
+      "Dashboard": "Module Studio",
+      "Modules": "Modules"
+    },
+    "Meta": {
+      "Title": "Module Studio"
+    },
+    "Modules": {
+      "Title": "Module Definitions",
+      "CreateNew": "Create Module",
+      "Edit": "Edit Module",
+      "View": "View Details",
+      "Name": "Module Name",
+      "NamePlaceholder": "e.g., fleet, crm, warehouse",
+      "DisplayName": "Display Name",
+      "DisplayNamePlaceholder": "e.g., Fleet Management",
+      "Description": "Description",
+      "DescriptionPlaceholder": "Describe what this module does",
+      "Icon": "Icon (Emoji)",
+      "Entities": "Entities",
+      "DeleteConfirm": "Are you sure you want to delete this module?",
+      "Generate": "Generate Code",
+      "GenerateConfirm": "This will generate all code files for this module. Continue?"
+    },
+    "Entities": {
+      "Title": "Entities",
+      "AddNew": "Add Entity",
+      "Builder": "Entity Builder",
+      "NoEntities": "No entities defined yet",
+      "AddFirstEntity": "Add your first entity to get started",
+      "DeleteConfirm": "Are you sure you want to remove this entity?"
+    },
+    "Fields": {
+      "Title": "Fields",
+      "AddField": "Add Field",
+      "Name": "Field Name",
+      "Type": "Type",
+      "Required": "Required",
+      "Validation": "Validation Rules"
+    },
+    "Messages": {
+      "ModuleCreated": "Module created successfully",
+      "ModuleUpdated": "Module updated successfully",
+      "ModuleDeleted": "Module deleted successfully",
+      "ModuleGenerated": "Module code generated successfully",
+      "EntityAdded": "Entity added successfully",
+      "EntityRemoved": "Entity removed successfully"
+    }
+  }
+}

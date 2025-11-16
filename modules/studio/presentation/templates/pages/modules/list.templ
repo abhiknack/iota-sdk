@@ -1,0 +1,89 @@
+package modules
+
+import (
+	"github.com/iota-uz/iota-sdk/modules/studio/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/badge"
+	"github.com/iota-uz/iota-sdk/components/base/icons"
+)
+
+templ ModuleList(vm *viewmodels.ModuleListViewModel) {
+	<div class="space-y-4">
+		<div class="flex justify-between items-center">
+			<h2 class="text-2xl font-bold">{ vm.PageCtx.T("Studio.Modules.Title") }</h2>
+			@button.Primary(button.Props{
+				Size: button.SizeNormal,
+				Icon: icons.Plus(icons.Props{Size: "16"}),
+				Attrs: templ.Attributes{
+					"hx-get": "/studio/modules/new",
+					"hx-target": "#module-form-modal",
+					"hx-swap": "innerHTML",
+				},
+			}) {
+				{ vm.PageCtx.T("Studio.Modules.CreateNew") }
+			}
+		</div>
+		
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+			for _, module := range vm.Modules {
+				<div class="bg-surface-100 rounded-lg p-6 shadow hover:shadow-lg transition-shadow">
+					<div class="flex items-start justify-between mb-4">
+						<div class="flex items-center space-x-3">
+							<div class="text-3xl">{ module.Icon }</div>
+							<div>
+								<h3 class="font-semibold text-lg">{ module.DisplayName }</h3>
+								<p class="text-sm text-surface-500">{ module.Name }</p>
+							</div>
+						</div>
+						@badge.New(badge.Props{
+							Variant: getStatusVariant(module.Status),
+							Size: badge.SizeSmall,
+						}) {
+							{ module.Status }
+						}
+					</div>
+					
+					<p class="text-sm text-surface-600 mb-4">{ module.Description }</p>
+					
+					<div class="flex items-center justify-between text-sm text-surface-500 mb-4">
+						<span>{ vm.PageCtx.T("Studio.Modules.Entities") }: { string(rune(module.EntityCount + 48)) }</span>
+						<span>{ module.CreatedAt }</span>
+					</div>
+					
+					<div class="flex space-x-2">
+						<a 
+							href={ templ.URL("/studio/modules/" + module.ID) }
+							class="flex-1 text-center px-4 py-2 bg-primary-500 text-white rounded hover:bg-primary-600 transition-colors"
+						>
+							{ vm.PageCtx.T("Studio.Modules.View") }
+						</a>
+						<button
+							hx-delete={ "/studio/modules/" + module.ID }
+							hx-confirm={ vm.PageCtx.T("Studio.Modules.DeleteConfirm") }
+							class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+						>
+							@icons.Trash(icons.Props{Size: "16"})
+						</button>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+	
+	<div id="module-form-modal"></div>
+}
+
+func getStatusVariant(status string) badge.Variant {
+	switch status {
+	case "draft":
+		return badge.VariantYellow
+	case "generated":
+		return badge.VariantBlue
+	case "active":
+		return badge.VariantGreen
+	case "archived":
+		return badge.VariantGray
+	default:
+		return badge.VariantGray
+	}
+}

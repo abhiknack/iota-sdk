@@ -1,0 +1,133 @@
+package vehicles
+
+import (
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/card"
+	"github.com/iota-uz/iota-sdk/components/base/input"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type CreatePageProps struct {
+	Vehicle  *viewmodels.VehicleFormViewModel
+	PostPath string
+}
+
+templ CreateForm(props *CreatePageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<form
+		class="flex flex-col justify-between h-full"
+		hx-post={ props.PostPath }
+		hx-swap="outerHTML"
+		hx-indicator="#save-btn"
+	>
+		@card.Card(card.Props{
+			Class:        "grid grid-cols-1 md:grid-cols-2 gap-4",
+			WrapperClass: "m-6",
+		}) {
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.Make"),
+				Attrs: templ.Attributes{
+					"name":     "Make",
+					"value":    props.Vehicle.Make,
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["Make"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.Model"),
+				Attrs: templ.Attributes{
+					"name":     "Model",
+					"value":    props.Vehicle.Model,
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["Model"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.Year"),
+				Attrs: templ.Attributes{
+					"name":     "Year",
+					"value":    props.Vehicle.Year,
+					"min":      "1900",
+					"max":      "2100",
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["Year"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.VIN"),
+				Attrs: templ.Attributes{
+					"name":      "VIN",
+					"value":     props.Vehicle.VIN,
+					"maxlength": "17",
+					"minlength": "17",
+					"required":  true,
+				},
+				Error: props.Vehicle.Errors["VIN"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.LicensePlate"),
+				Attrs: templ.Attributes{
+					"name":     "LicensePlate",
+					"value":    props.Vehicle.LicensePlate,
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["LicensePlate"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.CurrentOdometer"),
+				Attrs: templ.Attributes{
+					"name":     "CurrentOdometer",
+					"value":    props.Vehicle.CurrentOdometer,
+					"min":      "0",
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["CurrentOdometer"],
+			})
+			@input.Date(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.RegistrationExpiry"),
+				Attrs: templ.Attributes{
+					"name":     "RegistrationExpiry",
+					"value":    props.Vehicle.RegistrationExpiry,
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["RegistrationExpiry"],
+			})
+			@input.Date(&input.Props{
+				Label: pageCtx.T("Fleet.Vehicles.Single.InsuranceExpiry"),
+				Attrs: templ.Attributes{
+					"name":     "InsuranceExpiry",
+					"value":    props.Vehicle.InsuranceExpiry,
+					"required": true,
+				},
+				Error: props.Vehicle.Errors["InsuranceExpiry"],
+			})
+		}
+		<div class="h-20 shadow-t-lg border-t w-full flex items-center justify-end px-8 bg-surface-300 border-t-primary mt-auto gap-4">
+			@button.Secondary(button.Props{
+				Size: button.SizeMD,
+				Href: "/fleet/vehicles",
+			}) {
+				{ pageCtx.T("Cancel") }
+			}
+			@button.Primary(button.Props{
+				Size: button.SizeMD,
+				Attrs: templ.Attributes{
+					"id": "save-btn",
+				},
+			}) {
+				{ pageCtx.T("Save") }
+			}
+		</div>
+	</form>
+}
+
+templ New(props *CreatePageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Vehicles.Meta.New.Title")},
+	}) {
+		@CreateForm(props)
+	}
+}

@@ -1,0 +1,165 @@
+package vehicles
+
+import (
+	"fmt"
+	icons "github.com/iota-uz/icons/phosphor"
+	"github.com/iota-uz/iota-sdk/components/base"
+	"github.com/iota-uz/iota-sdk/components/base/badge"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/pagination"
+	"github.com/iota-uz/iota-sdk/components/filters"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type IndexPageProps struct {
+	Vehicles        []viewmodels.VehicleListViewModel
+	PaginationState *pagination.State
+	StatusOptions   []struct {
+		Value     string
+		MessageID string
+	}
+}
+
+templ VehiclesTable(props *IndexPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="flex flex-col gap-4 table-wrapper">
+		if len(props.Vehicles) == 0 {
+			@base.TableEmptyState(base.TableEmptyStateProps{
+				Title:       pageCtx.T("Fleet.Vehicles.List.NoVehicles.Title"),
+				Description: pageCtx.T("Fleet.Vehicles.List.NoVehicles.Message"),
+			})
+		} else {
+			@base.Table(base.TableProps{
+				Columns: []*base.TableColumn{
+					{Label: pageCtx.T("Fleet.Vehicles.List.Make"), Key: "make"},
+					{Label: pageCtx.T("Fleet.Vehicles.List.Model"), Key: "model"},
+					{Label: pageCtx.T("Fleet.Vehicles.List.Year"), Key: "year"},
+					{Label: pageCtx.T("Fleet.Vehicles.List.LicensePlate"), Key: "licensePlate"},
+					{Label: pageCtx.T("Fleet.Vehicles.List.Status"), Key: "status"},
+					{Label: pageCtx.T("Fleet.Vehicles.List.Odometer"), Key: "odometer"},
+					{Label: pageCtx.T("Fleet.Vehicles.List.RegistrationExpiry"), Key: "registrationExpiry"},
+					{Label: pageCtx.T("Actions"), Class: "w-16"},
+				},
+			}) {
+				for _, vehicle := range props.Vehicles {
+					@base.TableRow(base.TableRowProps{}) {
+						@base.TableCell(base.TableCellProps{}) {
+							{ vehicle.Make }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ vehicle.Model }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ fmt.Sprintf("%d", vehicle.Year) }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ vehicle.LicensePlate }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							@badge.New(badge.Props{
+								Size:    badge.SizeNormal,
+								Variant: vehicle.StatusBadgeVariant,
+							}) {
+								{ pageCtx.T(fmt.Sprintf("Fleet.Enums.VehicleStatus.%s", vehicle.Status)) }
+							}
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ fmt.Sprintf("%d km", vehicle.CurrentOdometer) }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							<div x-data="relativeformat">
+								<span x-text={ fmt.Sprintf("format('%s')", vehicle.RegistrationExpiry) }></span>
+							</div>
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							@button.Secondary(button.Props{
+								Fixed: true,
+								Size:  button.SizeSM,
+								Class: "btn-fixed",
+								Href:  fmt.Sprintf("/fleet/vehicles/%s/detail", vehicle.ID),
+							}) {
+								@icons.Eye(icons.Props{Size: "20"})
+							}
+						}
+					}
+				}
+			}
+			if len(props.PaginationState.Pages()) > 1 {
+				@pagination.Pagination(props.PaginationState)
+			}
+		}
+	</div>
+}
+
+templ VehiclesContent(props *IndexPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="m-6">
+		<h1 class="text-2xl font-medium">
+			{ pageCtx.T("Fleet.NavigationLinks.Vehicles") }
+		</h1>
+		<div class="mt-5 bg-surface-600 border border-primary rounded-lg">
+			<form
+				class="p-4 flex items-center gap-3"
+				hx-get="/fleet/vehicles"
+				hx-trigger="keyup changed delay:500ms from:(form input), change changed from:(form select)"
+				hx-target=".table-wrapper"
+				hx-swap="outerHTML"
+			>
+				@filters.Search([]filters.SearchField{
+					{
+						Label: pageCtx.T("Fleet.Vehicles.List.SearchMake"),
+						Key:   "Make",
+					},
+					{
+						Label: pageCtx.T("Fleet.Vehicles.List.SearchModel"),
+						Key:   "Model",
+					},
+					{
+						Label: pageCtx.T("Fleet.Vehicles.List.SearchLicensePlate"),
+						Key:   "LicensePlate",
+					},
+				})
+				@base.Select(&base.SelectProps{
+					Attrs: templ.Attributes{
+						"name": "Status",
+					},
+				}) {
+					<option value="">{ pageCtx.T("Fleet.Vehicles.List.AllStatuses") }</option>
+					for _, option := range props.StatusOptions {
+						<option value={ option.Value }>{ pageCtx.T(option.MessageID) }</option>
+					}
+				}
+				@base.Select(&base.SelectProps{
+					Attrs: templ.Attributes{
+						"name": "Year",
+					},
+				}) {
+					<option value="">{ pageCtx.T("Fleet.Vehicles.List.AllYears") }</option>
+					for year := 2024; year >= 2000; year-- {
+						<option value={ fmt.Sprintf("%d", year) }>{ fmt.Sprintf("%d", year) }</option>
+					}
+				}
+				@filters.PageSize()
+				@button.Primary(button.Props{
+					Size: button.SizeNormal,
+					Href: "/fleet/vehicles/new",
+					Icon: icons.PlusCircle(icons.Props{Size: "18"}),
+				}) {
+					{ pageCtx.T("Fleet.Vehicles.List.New") }
+				}
+			</form>
+			@VehiclesTable(props)
+		</div>
+	</div>
+}
+
+templ Index(props *IndexPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Vehicles.Meta.List.Title")},
+	}) {
+		@VehiclesContent(props)
+	}
+}

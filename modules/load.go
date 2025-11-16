@@ -4,6 +4,8 @@ import (
 	"slices"
 
 	"github.com/iota-uz/iota-sdk/modules/billing"
+	"github.com/iota-uz/iota-sdk/modules/fleet"
+	"github.com/iota-uz/iota-sdk/modules/studio"
 
 	"github.com/iota-uz/iota-sdk/modules/bichat"
 	"github.com/iota-uz/iota-sdk/modules/core"
@@ -33,6 +35,8 @@ var (
 		crm.NewModule(),
 		website.NewModule(),
 		billing.NewModule(),
+		fleet.NewModule(),
+		studio.NewModule(),
 		testkit.NewModule(), // Test endpoints - only active when ENABLE_TEST_ENDPOINTS=true
 	}
 
@@ -45,6 +49,8 @@ var (
 		warehouse.NavItems,
 		crm.NavItems,
 		website.NavItems,
+		fleet.NavItems,
+		studio.NavItems,
 	)
 )
 

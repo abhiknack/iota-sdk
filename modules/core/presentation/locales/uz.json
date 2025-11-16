@@ -87,7 +87,8 @@
     "user": "Foydalanuvchilar",
     "role": "Rollar",
     "group": "Guruhlar",
-    "upload": "Yuklashlar"
+    "upload": "Yuklashlar",
+    "Fleet": "Avtomobil parkini boshqarish"
   },
   "Permissions": {
     "User": {
@@ -559,6 +560,48 @@
         "Label": "Xodimlarni boshqarish",
         "_Description": "Xodimlarni to'liq boshqarish"
       }
+    },
+    "Fleet": {
+      "VehicleView": {
+        "Label": "Transportni ko'rish",
+        "_Description": "Transport ma'lumotlarini faqat ko'rish"
+      },
+      "VehicleManage": {
+        "Label": "Transportni boshqarish",
+        "_Description": "Transportni to'liq boshqarish"
+      },
+      "DriverView": {
+        "Label": "Haydovchilarni ko'rish",
+        "_Description": "Haydovchilar ma'lumotlarini faqat ko'rish"
+      },
+      "DriverManage": {
+        "Label": "Haydovchilarni boshqarish",
+        "_Description": "Haydovchilarni to'liq boshqarish"
+      },
+      "TripView": {
+        "Label": "Sayohatlarni ko'rish",
+        "_Description": "Sayohatlar ma'lumotlarini faqat ko'rish"
+      },
+      "TripManage": {
+        "Label": "Sayohatlarni boshqarish",
+        "_Description": "Sayohatlarni to'liq boshqarish"
+      },
+      "MaintenanceView": {
+        "Label": "Texnik xizmatni ko'rish",
+        "_Description": "Texnik xizmat ma'lumotlarini faqat ko'rish"
+      },
+      "MaintenanceManage": {
+        "Label": "Texnik xizmatni boshqarish",
+        "_Description": "Texnik xizmatni to'liq boshqarish"
+      },
+      "FuelEntryView": {
+        "Label": "Yoqilg'i yozuvlarini ko'rish",
+        "_Description": "Yoqilg'i yozuvlari ma'lumotlarini faqat ko'rish"
+      },
+      "FuelEntryManage": {
+        "Label": "Yoqilg'i yozuvlarini boshqarish",
+        "_Description": "Yoqilg'i yozuvlarini to'liq boshqarish"
+      }
     }
   },
   "Modules": {
@@ -567,7 +610,8 @@
     "Projects": "Loyihalar",
     "Warehouse": "Ombor",
     "CRM": "CRM",
-    "HRM": "Kadrlar boshqaruvi"
+    "HRM": "Kadrlar boshqaruvi",
+    "Fleet": "Avtomobil parkini boshqarish"
   },
   "Countries": {
     "AF": "Afg'oniston",

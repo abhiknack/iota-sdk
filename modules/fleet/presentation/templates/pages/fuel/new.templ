@@ -1,0 +1,166 @@
+package fuel
+
+import (
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/card"
+	"github.com/iota-uz/iota-sdk/components/base/input"
+	"github.com/iota-uz/iota-sdk/components/base"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type CreatePageProps struct {
+	FuelEntry          *viewmodels.FuelEntryFormViewModel
+	PostPath           string
+	VehicleOptions     []struct {
+		Value string
+		Label string
+	}
+	DriverOptions      []struct {
+		Value string
+		Label string
+	}
+	FuelTypeOptions    []struct {
+		Value     string
+		MessageID string
+	}
+}
+
+templ CreateForm(props *CreatePageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<form
+		class="flex flex-col justify-between h-full"
+		hx-post={ props.PostPath }
+		hx-swap="outerHTML"
+		hx-indicator="#save-btn"
+	>
+		@card.Card(card.Props{
+			Class:        "grid grid-cols-1 md:grid-cols-2 gap-4",
+			WrapperClass: "m-6",
+		}) {
+			<div class="md:col-span-2">
+				@base.Select(&base.SelectProps{
+					Label: pageCtx.T("Fleet.Fuel.Single.Vehicle"),
+					Attrs: templ.Attributes{
+						"name":     "VehicleID",
+						"required": true,
+					},
+					Error: props.FuelEntry.Errors["VehicleID"],
+				}) {
+					<option value="">{ pageCtx.T("Fleet.Fuel.Single.SelectVehicle") }</option>
+					for _, option := range props.VehicleOptions {
+						<option value={ option.Value } selected?={ props.FuelEntry.VehicleID == option.Value }>
+							{ option.Label }
+						</option>
+					}
+				}
+			</div>
+			<div class="md:col-span-2">
+				@base.Select(&base.SelectProps{
+					Label: pageCtx.T("Fleet.Fuel.Single.Driver"),
+					Attrs: templ.Attributes{
+						"name": "DriverID",
+					},
+					Error: props.FuelEntry.Errors["DriverID"],
+				}) {
+					<option value="">{ pageCtx.T("Fleet.Fuel.Single.SelectDriver") }</option>
+					for _, option := range props.DriverOptions {
+						<option value={ option.Value } selected?={ props.FuelEntry.DriverID == option.Value }>
+							{ option.Label }
+						</option>
+					}
+				}
+			</div>
+			@input.Date(&input.Props{
+				Label: pageCtx.T("Fleet.Fuel.Single.Date"),
+				Attrs: templ.Attributes{
+					"name":     "Date",
+					"value":    props.FuelEntry.Date,
+					"required": true,
+				},
+				Error: props.FuelEntry.Errors["Date"],
+			})
+			@base.Select(&base.SelectProps{
+				Label: pageCtx.T("Fleet.Fuel.Single.FuelType"),
+				Attrs: templ.Attributes{
+					"name":     "FuelType",
+					"required": true,
+				},
+				Error: props.FuelEntry.Errors["FuelType"],
+			}) {
+				<option value="">{ pageCtx.T("Fleet.Fuel.Single.SelectFuelType") }</option>
+				for _, option := range props.FuelTypeOptions {
+					<option value={ option.Value } selected?={ props.FuelEntry.FuelType == option.Value }>
+						{ pageCtx.T(option.MessageID) }
+					</option>
+				}
+			}
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Fuel.Single.Quantity"),
+				Attrs: templ.Attributes{
+					"name":     "Quantity",
+					"value":    props.FuelEntry.Quantity,
+					"min":      "0",
+					"step":     "0.01",
+					"required": true,
+				},
+				Error: props.FuelEntry.Errors["Quantity"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Fuel.Single.Cost"),
+				Attrs: templ.Attributes{
+					"name":     "Cost",
+					"value":    props.FuelEntry.Cost,
+					"min":      "0",
+					"step":     "0.01",
+					"required": true,
+				},
+				Error: props.FuelEntry.Errors["Cost"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Fuel.Single.Odometer"),
+				Attrs: templ.Attributes{
+					"name":     "Odometer",
+					"value":    props.FuelEntry.Odometer,
+					"min":      "0",
+					"required": true,
+				},
+				Error: props.FuelEntry.Errors["Odometer"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Fuel.Single.Location"),
+				Attrs: templ.Attributes{
+					"name":  "Location",
+					"value": props.FuelEntry.Location,
+				},
+				Error: props.FuelEntry.Errors["Location"],
+			})
+		}
+		<div class="h-20 shadow-t-lg border-t w-full flex items-center justify-end px-8 bg-surface-300 border-t-primary mt-auto gap-4">
+			@button.Secondary(button.Props{
+				Size: button.SizeMD,
+				Href: "/fleet/fuel",
+			}) {
+				{ pageCtx.T("Cancel") }
+			}
+			@button.Primary(button.Props{
+				Size: button.SizeMD,
+				Attrs: templ.Attributes{
+					"id": "save-btn",
+				},
+			}) {
+				{ pageCtx.T("Save") }
+			}
+		</div>
+	</form>
+}
+
+templ New(props *CreatePageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Fuel.Meta.New.Title")},
+	}) {
+		@CreateForm(props)
+	}
+}

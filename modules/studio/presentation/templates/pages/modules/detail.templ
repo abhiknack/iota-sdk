@@ -1,0 +1,124 @@
+package modules
+
+import (
+	"github.com/iota-uz/iota-sdk/modules/studio/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/badge"
+	"github.com/iota-uz/iota-sdk/components/base/icons"
+)
+
+templ ModuleDetail(vm *viewmodels.ModuleDetailViewModel) {
+	<div class="space-y-6">
+		<div class="flex justify-between items-start">
+			<div class="flex items-center space-x-4">
+				<div class="text-5xl">{ vm.Module.Icon }</div>
+				<div>
+					<h1 class="text-3xl font-bold">{ vm.Module.DisplayName }</h1>
+					<p class="text-surface-500">{ vm.Module.Name }</p>
+				</div>
+				@badge.New(badge.Props{
+					Variant: getStatusVariant(vm.Module.Status),
+					Size: badge.SizeNormal,
+				}) {
+					{ vm.Module.Status }
+				}
+			</div>
+			
+			<div class="flex space-x-2">
+				<a
+					href={ templ.URL("/studio/modules/" + vm.Module.ID + "/edit") }
+					class="px-4 py-2 bg-surface-200 text-surface-700 rounded hover:bg-surface-300"
+				>
+					{ vm.PageCtx.T("Common.Edit") }
+				</a>
+				if vm.Module.Status == "draft" {
+					<button
+						hx-post={ "/studio/modules/" + vm.Module.ID + "/generate" }
+						hx-confirm={ vm.PageCtx.T("Studio.Modules.GenerateConfirm") }
+						class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+					>
+						{ vm.PageCtx.T("Studio.Modules.Generate") }
+					</button>
+				}
+			</div>
+		</div>
+		
+		<div class="bg-surface-100 rounded-lg p-6">
+			<p class="text-surface-700">{ vm.Module.Description }</p>
+		</div>
+		
+		<div>
+			<div class="flex justify-between items-center mb-4">
+				<h2 class="text-2xl font-bold">{ vm.PageCtx.T("Studio.Entities.Title") }</h2>
+				<button
+					onclick="showEntityBuilder()"
+					class="px-4 py-2 bg-primary-500 text-white rounded hover:bg-primary-600"
+				>
+					@icons.Plus(icons.Props{Size: "16"})
+					{ vm.PageCtx.T("Studio.Entities.AddNew") }
+				</button>
+			</div>
+			
+			<div class="space-y-4">
+				for _, entity := range vm.Entities {
+					<div class="bg-white rounded-lg p-6 shadow">
+						<div class="flex justify-between items-start mb-4">
+							<div>
+								<h3 class="text-xl font-semibold">{ entity.DisplayName }</h3>
+								<p class="text-sm text-surface-500">{ entity.Name }</p>
+							</div>
+							<button
+								hx-delete={ "/studio/modules/" + vm.Module.ID + "/entities/" + entity.ID }
+								hx-confirm={ vm.PageCtx.T("Studio.Entities.DeleteConfirm") }
+								class="text-red-500 hover:text-red-700"
+							>
+								@icons.Trash(icons.Props{Size: "16"})
+							</button>
+						</div>
+						
+						<div class="space-y-2">
+							<h4 class="font-semibold text-sm text-surface-600">{ vm.PageCtx.T("Studio.Fields.Title") }</h4>
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+								for _, field := range entity.Fields {
+									<div class="flex items-center space-x-2 text-sm">
+										<span class="font-mono text-primary-600">{ field.Name }</span>
+										<span class="text-surface-500">:</span>
+										<span class="text-surface-700">{ field.Type }</span>
+										if field.Required {
+											<span class="text-red-500">*</span>
+										}
+									</div>
+								}
+							</div>
+						</div>
+					</div>
+				}
+				
+				if len(vm.Entities) == 0 {
+					<div class="text-center py-12 text-surface-500">
+						<p>{ vm.PageCtx.T("Studio.Entities.NoEntities") }</p>
+						<p class="text-sm">{ vm.PageCtx.T("Studio.Entities.AddFirstEntity") }</p>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+	
+	<div id="entity-builder-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+		<div class="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+			<h3 class="text-xl font-bold mb-4">{ vm.PageCtx.T("Studio.Entities.Builder") }</h3>
+			<div id="entity-builder-content"></div>
+		</div>
+	</div>
+	
+	<script>
+		function showEntityBuilder() {
+			document.getElementById('entity-builder-modal').classList.remove('hidden');
+			// Initialize Alpine.js entity builder here
+		}
+		
+		function hideEntityBuilder() {
+			document.getElementById('entity-builder-modal').classList.add('hidden');
+		}
+	</script>
+}

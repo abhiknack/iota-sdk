@@ -1,0 +1,242 @@
+package trips
+
+import (
+	"fmt"
+	icons "github.com/iota-uz/icons/phosphor"
+	"github.com/iota-uz/iota-sdk/components/base/badge"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/card"
+	"github.com/iota-uz/iota-sdk/components/base/input"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type DetailPageProps struct {
+	Trip *viewmodels.TripDetailViewModel
+}
+
+templ TripInfo(trip *viewmodels.TripDetailViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+		<div class="space-y-4">
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Trips.Single.Vehicle") }</label>
+				<p class="mt-1 text-base">{ trip.VehicleName }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Trips.Single.Driver") }</label>
+				<p class="mt-1 text-base">{ trip.DriverName }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Trips.Single.Origin") }</label>
+				<p class="mt-1 text-base">{ trip.Origin }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Trips.Single.Destination") }</label>
+				<p class="mt-1 text-base">{ trip.Destination }</p>
+			</div>
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Trips.Single.Status") }</label>
+				<div class="mt-1">
+					@badge.New(badge.Props{
+						Size:    badge.SizeNormal,
+						Variant: badge.Variant(trip.StatusBadgeVariant),
+					}) {
+						{ pageCtx.T(fmt.Sprintf("Fleet.Enums.TripStatus.%s", trip.Status)) }
+					}
+				</div>
+			</div>
+		</div>
+		<div class="space-y-4">
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Trips.Single.StartTime") }</label>
+				<div class="mt-1" x-data="relativeformat">
+					<span x-text={ fmt.Sprintf("format('%s')", trip.StartTime) }></span>
+				</div>
+			</div>
+			if trip.EndTime != "" {
+				<div>
+					<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Trips.Single.EndTime") }</label>
+					<div class="mt-1" x-data="relativeformat">
+						<span x-text={ fmt.Sprintf("format('%s')", trip.EndTime) }></span>
+					</div>
+				</div>
+			}
+			<div>
+				<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Trips.Single.StartOdometer") }</label>
+				<p class="mt-1 text-base">{ fmt.Sprintf("%d km", trip.StartOdometer) }</p>
+			</div>
+			if trip.EndOdometer > 0 {
+				<div>
+					<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Trips.Single.EndOdometer") }</label>
+					<p class="mt-1 text-base">{ fmt.Sprintf("%d km", trip.EndOdometer) }</p>
+				</div>
+			}
+			if trip.Purpose != "" {
+				<div>
+					<label class="text-sm font-medium text-200">{ pageCtx.T("Fleet.Trips.Single.Purpose") }</label>
+					<p class="mt-1 text-base">{ trip.Purpose }</p>
+				</div>
+			}
+		</div>
+	</div>
+}
+
+templ TripStatistics(trip *viewmodels.TripDetailViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+		@card.Card(card.Props{}) {
+			<div class="text-center">
+				<p class="text-sm text-300 mb-1">{ pageCtx.T("Fleet.Trips.Single.Distance") }</p>
+				<p class="text-2xl font-bold text-200">
+					if trip.Distance > 0 {
+						{ fmt.Sprintf("%d km", trip.Distance) }
+					} else {
+						<span class="text-300">-</span>
+					}
+				</p>
+			</div>
+		}
+		@card.Card(card.Props{}) {
+			<div class="text-center">
+				<p class="text-sm text-300 mb-1">{ pageCtx.T("Fleet.Trips.Single.Duration") }</p>
+				<p class="text-2xl font-bold text-200">
+					if trip.Duration != "" {
+						{ trip.Duration }
+					} else {
+						<span class="text-300">-</span>
+					}
+				</p>
+			</div>
+		}
+		@card.Card(card.Props{}) {
+			<div class="text-center">
+				<p class="text-sm text-300 mb-1">{ pageCtx.T("Fleet.Trips.Single.AverageSpeed") }</p>
+				<p class="text-2xl font-bold text-200">
+					if trip.AverageSpeed > 0 {
+						{ fmt.Sprintf("%.1f km/h", trip.AverageSpeed) }
+					} else {
+						<span class="text-300">-</span>
+					}
+				</p>
+			</div>
+		}
+	</div>
+}
+
+templ CompleteTripForm(trip *viewmodels.TripDetailViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<form
+		hx-post={ fmt.Sprintf("/fleet/trips/%s/complete", trip.ID) }
+		hx-swap="outerHTML"
+		class="space-y-4"
+	>
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			@input.DateTime(&input.Props{
+				Label: pageCtx.T("Fleet.Trips.Single.EndTime"),
+				Attrs: templ.Attributes{
+					"name":     "EndTime",
+					"required": true,
+				},
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Trips.Single.EndOdometer"),
+				Attrs: templ.Attributes{
+					"name":     "EndOdometer",
+					"min":      fmt.Sprintf("%d", trip.StartOdometer),
+					"required": true,
+				},
+			})
+		</div>
+		<div class="flex justify-end">
+			@button.Primary(button.Props{
+				Size: button.SizeMD,
+			}) {
+				{ pageCtx.T("Fleet.Trips.Single.CompleteTrip") }
+			}
+		</div>
+	</form>
+}
+
+templ CancelTripForm(trip *viewmodels.TripDetailViewModel) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<form
+		hx-post={ fmt.Sprintf("/fleet/trips/%s/cancel", trip.ID) }
+		hx-swap="outerHTML"
+		hx-confirm={ pageCtx.T("ConfirmAction") }
+		class="space-y-4"
+	>
+		@input.TextArea(&input.TextAreaProps{
+			Label: pageCtx.T("Fleet.Trips.Single.CancelReason"),
+			Attrs: templ.Attributes{
+				"name": "Reason",
+				"rows": "3",
+			},
+		})
+		<div class="flex justify-end">
+			@button.Danger(button.Props{
+				Size: button.SizeMD,
+			}) {
+				{ pageCtx.T("Fleet.Trips.Single.CancelTrip") }
+			}
+		</div>
+	</form>
+}
+
+templ DetailContent(props *DetailPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="m-6">
+		<div class="flex items-center justify-between mb-5">
+			<div>
+				<h1 class="text-2xl font-medium">
+					{ fmt.Sprintf("%s → %s", props.Trip.Origin, props.Trip.Destination) }
+				</h1>
+				<p class="text-sm text-200 mt-1">
+					{ fmt.Sprintf("%s • %s", props.Trip.VehicleName, props.Trip.DriverName) }
+				</p>
+			</div>
+			<div class="flex gap-3">
+				@button.Secondary(button.Props{
+					Size: button.SizeNormal,
+					Href: "/fleet/trips",
+					Icon: icons.ArrowLeft(icons.Props{Size: "18"}),
+				}) {
+					{ pageCtx.T("Back") }
+				}
+			</div>
+		</div>
+		<div class="space-y-6">
+			<div class="bg-surface-600 border border-primary rounded-lg p-6">
+				<h3 class="text-lg font-medium text-200 mb-4">{ pageCtx.T("Fleet.Trips.Detail.TripInfo") }</h3>
+				@TripInfo(props.Trip)
+			</div>
+			<div class="bg-surface-600 border border-primary rounded-lg p-6">
+				<h3 class="text-lg font-medium text-200 mb-4">{ pageCtx.T("Fleet.Trips.Detail.Statistics") }</h3>
+				@TripStatistics(props.Trip)
+			</div>
+			if props.Trip.CanComplete || props.Trip.CanCancel {
+				<div class="bg-surface-600 border border-primary rounded-lg p-6">
+					<h3 class="text-lg font-medium text-200 mb-4">{ pageCtx.T("Fleet.Trips.Detail.Actions") }</h3>
+					if props.Trip.CanComplete {
+						@CompleteTripForm(props.Trip)
+					}
+					if props.Trip.CanCancel {
+						<div class="mt-6 pt-6 border-t border-primary">
+							@CancelTripForm(props.Trip)
+						</div>
+					}
+				</div>
+			}
+		</div>
+	</div>
+}
+
+templ Detail(props *DetailPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Trips.Meta.Detail.Title")},
+	}) {
+		@DetailContent(props)
+	}
+}

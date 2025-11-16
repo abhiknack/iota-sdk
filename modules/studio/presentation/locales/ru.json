@@ -1,0 +1,52 @@
+{
+  "Studio": {
+    "NavigationLinks": {
+      "Dashboard": "Студия модулей",
+      "Modules": "Модули"
+    },
+    "Meta": {
+      "Title": "Студия модулей"
+    },
+    "Modules": {
+      "Title": "Определения модулей",
+      "CreateNew": "Создать модуль",
+      "Edit": "Редактировать модуль",
+      "View": "Просмотр деталей",
+      "Name": "Имя модуля",
+      "NamePlaceholder": "например, fleet, crm, warehouse",
+      "DisplayName": "Отображаемое имя",
+      "DisplayNamePlaceholder": "например, Управление автопарком",
+      "Description": "Описание",
+      "DescriptionPlaceholder": "Опишите, что делает этот модуль",
+      "Icon": "Иконка (Эмодзи)",
+      "Entities": "Сущности",
+      "DeleteConfirm": "Вы уверены, что хотите удалить этот модуль?",
+      "Generate": "Генерировать код",
+      "GenerateConfirm": "Это создаст все файлы кода для этого модуля. Продолжить?"
+    },
+    "Entities": {
+      "Title": "Сущности",
+      "AddNew": "Добавить сущность",
+      "Builder": "Конструктор сущностей",
+      "NoEntities": "Сущности еще не определены",
+      "AddFirstEntity": "Добавьте свою первую сущность для начала",
+      "DeleteConfirm": "Вы уверены, что хотите удалить эту сущность?"
+    },
+    "Fields": {
+      "Title": "Поля",
+      "AddField": "Добавить поле",
+      "Name": "Имя поля",
+      "Type": "Тип",
+      "Required": "Обязательное",
+      "Validation": "Правила валидации"
+    },
+    "Messages": {
+      "ModuleCreated": "Модуль успешно создан",
+      "ModuleUpdated": "Модуль успешно обновлен",
+      "ModuleDeleted": "Модуль успешно удален",
+      "ModuleGenerated": "Код модуля успешно сгенерирован",
+      "EntityAdded": "Сущность успешно добавлена",
+      "EntityRemoved": "Сущность успешно удалена"
+    }
+  }
+}

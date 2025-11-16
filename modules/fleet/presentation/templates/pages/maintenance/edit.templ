@@ -1,0 +1,208 @@
+package maintenance
+
+import (
+	"fmt"
+	icons "github.com/iota-uz/icons/phosphor"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/card"
+	"github.com/iota-uz/iota-sdk/components/base/dialog"
+	"github.com/iota-uz/iota-sdk/components/base/input"
+	"github.com/iota-uz/iota-sdk/components/base"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type EditPageProps struct {
+	Maintenance        *viewmodels.MaintenanceFormViewModel
+	VehicleOptions     []struct {
+		Value string
+		Label string
+	}
+	ServiceTypeOptions []struct {
+		Value     string
+		MessageID string
+	}
+}
+
+templ EditForm(props *EditPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="flex flex-col justify-between h-full" id="edit-content">
+		@card.Card(card.Props{
+			Class:        "grid grid-cols-1 md:grid-cols-2 gap-4",
+			WrapperClass: "m-6",
+		}) {
+			<div class="md:col-span-2">
+				@base.Select(&base.SelectProps{
+					Label: pageCtx.T("Fleet.Maintenance.Single.Vehicle"),
+					Attrs: templ.Attributes{
+						"name":     "VehicleID",
+						"form":     "save-form",
+						"required": true,
+					},
+					Error: props.Maintenance.Errors["VehicleID"],
+				}) {
+					<option value="">{ pageCtx.T("Fleet.Maintenance.Single.SelectVehicle") }</option>
+					for _, option := range props.VehicleOptions {
+						<option value={ option.Value } selected?={ props.Maintenance.VehicleID == option.Value }>
+							{ option.Label }
+						</option>
+					}
+				}
+			</div>
+			@base.Select(&base.SelectProps{
+				Label: pageCtx.T("Fleet.Maintenance.Single.ServiceType"),
+				Attrs: templ.Attributes{
+					"name":     "ServiceType",
+					"form":     "save-form",
+					"required": true,
+				},
+				Error: props.Maintenance.Errors["ServiceType"],
+			}) {
+				<option value="">{ pageCtx.T("Fleet.Maintenance.Single.SelectServiceType") }</option>
+				for _, option := range props.ServiceTypeOptions {
+					<option value={ option.Value } selected?={ props.Maintenance.ServiceType == option.Value }>
+						{ pageCtx.T(option.MessageID) }
+					</option>
+				}
+			}
+			@input.Date(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.ServiceDate"),
+				Attrs: templ.Attributes{
+					"name":     "ServiceDate",
+					"value":    props.Maintenance.ServiceDate,
+					"form":     "save-form",
+					"required": true,
+				},
+				Error: props.Maintenance.Errors["ServiceDate"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.Odometer"),
+				Attrs: templ.Attributes{
+					"name":     "Odometer",
+					"value":    props.Maintenance.Odometer,
+					"form":     "save-form",
+					"min":      "0",
+					"required": true,
+				},
+				Error: props.Maintenance.Errors["Odometer"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.Cost"),
+				Attrs: templ.Attributes{
+					"name":     "Cost",
+					"value":    props.Maintenance.Cost,
+					"form":     "save-form",
+					"min":      "0",
+					"step":     "0.01",
+					"required": true,
+				},
+				Error: props.Maintenance.Errors["Cost"],
+			})
+			@input.Text(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.ServiceProvider"),
+				Attrs: templ.Attributes{
+					"name":  "ServiceProvider",
+					"value": props.Maintenance.ServiceProvider,
+					"form":  "save-form",
+				},
+				Error: props.Maintenance.Errors["ServiceProvider"],
+			})
+			@input.Date(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.NextServiceDue"),
+				Attrs: templ.Attributes{
+					"name":  "NextServiceDue",
+					"value": props.Maintenance.NextServiceDue,
+					"form":  "save-form",
+				},
+				Error: props.Maintenance.Errors["NextServiceDue"],
+			})
+			@input.Number(&input.Props{
+				Label: pageCtx.T("Fleet.Maintenance.Single.NextServiceOdometer"),
+				Attrs: templ.Attributes{
+					"name":  "NextServiceOdometer",
+					"value": props.Maintenance.NextServiceOdometer,
+					"form":  "save-form",
+					"min":   "0",
+				},
+				Error: props.Maintenance.Errors["NextServiceOdometer"],
+			})
+			<div class="md:col-span-2">
+				@input.TextArea(&input.TextAreaProps{
+					Label: pageCtx.T("Fleet.Maintenance.Single.Notes"),
+					Attrs: templ.Attributes{
+						"name":  "Description",
+						"value": props.Maintenance.Description,
+						"form":  "save-form",
+						"rows":  "4",
+					},
+					Error: props.Maintenance.Errors["Description"],
+				})
+			</div>
+		}
+		<div x-data class="h-20 shadow-t-lg border-t w-full flex items-center justify-end px-8 bg-surface-300 border-t-primary mt-auto gap-4">
+			<form
+				id="delete-form"
+				hx-post={ fmt.Sprintf("/fleet/maintenance/%s/delete", props.Maintenance.ID) }
+				hx-trigger="submit"
+				hx-target="closest .content"
+				hx-swap="innerHTML"
+				hx-indicator="#delete-maintenance-btn"
+				hx-disabled-elt="find button"
+			>
+				@button.Danger(button.Props{
+					Size: button.SizeMD,
+					Attrs: templ.Attributes{
+						"type":   "button",
+						"@click": "$dispatch('open-delete-maintenance-confirmation')",
+						"id":     "delete-maintenance-btn",
+					},
+				}) {
+					{ pageCtx.T("Delete") }
+				}
+			</form>
+			<form
+				id="save-form"
+				method="post"
+				hx-post={ fmt.Sprintf("/fleet/maintenance/%s", props.Maintenance.ID) }
+				hx-indicator="#save-btn"
+				hx-target="#edit-content"
+				hx-swap="outerHTML"
+			>
+				@button.Primary(button.Props{
+					Size: button.SizeMD,
+					Attrs: templ.Attributes{
+						"id": "save-btn",
+					},
+				}) {
+					{ pageCtx.T("Save") }
+				}
+			</form>
+		</div>
+	</div>
+}
+
+templ Edit(props *EditPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Maintenance.Meta.Edit.Title")},
+	}) {
+		@EditForm(props)
+		@dialog.Confirmation(&dialog.Props{
+			CancelText:  pageCtx.T("Cancel"),
+			ConfirmText: pageCtx.T("Delete"),
+			Heading:     pageCtx.T("Fleet.Maintenance.Single.Delete"),
+			Text:        pageCtx.T("Fleet.Maintenance.Single.DeleteConfirmation"),
+			Icon:        icons.Trash(icons.Props{Size: "20"}),
+			Action:      "open-delete-maintenance-confirmation",
+			Attrs: templ.Attributes{
+				"@closing": `({target}) => {
+					if (target.returnValue === "confirm") {
+						let deleteForm = document.getElementById("delete-form");
+						htmx.trigger(deleteForm, "submit");
+					}
+				}`,
+			},
+		})
+	}
+}

@@ -1,0 +1,172 @@
+package drivers
+
+import (
+	"fmt"
+	icons "github.com/iota-uz/icons/phosphor"
+	"github.com/iota-uz/iota-sdk/components/base"
+	"github.com/iota-uz/iota-sdk/components/base/badge"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/pagination"
+	"github.com/iota-uz/iota-sdk/components/filters"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type IndexPageProps struct {
+	Drivers         []viewmodels.DriverListViewModel
+	PaginationState *pagination.State
+	StatusOptions   []struct {
+		Value     string
+		MessageID string
+	}
+}
+
+templ DriversTable(props *IndexPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="flex flex-col gap-4 table-wrapper">
+		if len(props.Drivers) == 0 {
+			@base.TableEmptyState(base.TableEmptyStateProps{
+				Title:       pageCtx.T("Fleet.Drivers.List.NoDrivers.Title"),
+				Description: pageCtx.T("Fleet.Drivers.List.NoDrivers.Message"),
+			})
+		} else {
+			@base.Table(base.TableProps{
+				Columns: []*base.TableColumn{
+					{Label: pageCtx.T("Fleet.Drivers.List.FullName"), Key: "fullName"},
+					{Label: pageCtx.T("Fleet.Drivers.List.LicenseNumber"), Key: "licenseNumber"},
+					{Label: pageCtx.T("Fleet.Drivers.List.LicenseExpiry"), Key: "licenseExpiry"},
+					{Label: pageCtx.T("Fleet.Drivers.List.Phone"), Key: "phone"},
+					{Label: pageCtx.T("Fleet.Drivers.List.Email"), Key: "email"},
+					{Label: pageCtx.T("Fleet.Drivers.List.Status"), Key: "status"},
+					{Label: pageCtx.T("Actions"), Class: "w-16"},
+				},
+			}) {
+				for _, driver := range props.Drivers {
+					@base.TableRow(base.TableRowProps{}) {
+						@base.TableCell(base.TableCellProps{}) {
+							{ driver.FullName }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ driver.LicenseNumber }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							<div class="flex items-center gap-2">
+								<div x-data="relativeformat">
+									<span x-text={ fmt.Sprintf("format('%s')", driver.LicenseExpiry) }></span>
+								</div>
+								if driver.LicenseExpiryWarning {
+									@badge.New(badge.Props{
+										Size:    badge.SizeNormal,
+										Variant: badge.VariantYellow,
+									}) {
+										@icons.Warning(icons.Props{Size: "16"})
+										{ pageCtx.T("Fleet.Drivers.List.ExpiringLicense") }
+									}
+								}
+							</div>
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ driver.Phone }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ driver.Email }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							@badge.New(badge.Props{
+								Size:    badge.SizeNormal,
+								Variant: badge.Variant(driver.StatusBadgeVariant),
+							}) {
+								{ pageCtx.T(fmt.Sprintf("Fleet.Enums.DriverStatus.%s", driver.Status)) }
+							}
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							<div class="flex gap-2">
+								@button.Secondary(button.Props{
+									Fixed: true,
+									Size:  button.SizeSM,
+									Class: "btn-fixed",
+									Href:  fmt.Sprintf("/fleet/drivers/%s", driver.ID),
+								}) {
+									@icons.Eye(icons.Props{Size: "20"})
+								}
+								@button.Secondary(button.Props{
+									Fixed: true,
+									Size:  button.SizeSM,
+									Class: "btn-fixed",
+									Href:  fmt.Sprintf("/fleet/drivers/%s/edit", driver.ID),
+								}) {
+									@icons.PencilSimple(icons.Props{Size: "20"})
+								}
+							</div>
+						}
+					}
+				}
+			}
+			if len(props.PaginationState.Pages()) > 1 {
+				@pagination.Pagination(props.PaginationState)
+			}
+		}
+	</div>
+}
+
+templ DriversContent(props *IndexPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="m-6">
+		<h1 class="text-2xl font-medium">
+			{ pageCtx.T("Fleet.NavigationLinks.Drivers") }
+		</h1>
+		<div class="mt-5 bg-surface-600 border border-primary rounded-lg">
+			<form
+				class="p-4 flex items-center gap-3"
+				hx-get="/fleet/drivers"
+				hx-trigger="keyup changed delay:500ms from:(form input), change changed from:(form select)"
+				hx-target=".table-wrapper"
+				hx-swap="outerHTML"
+			>
+				@filters.Search([]filters.SearchField{
+					{
+						Label: pageCtx.T("Fleet.Drivers.List.SearchFirstName"),
+						Key:   "FirstName",
+					},
+					{
+						Label: pageCtx.T("Fleet.Drivers.List.SearchLastName"),
+						Key:   "LastName",
+					},
+					{
+						Label: pageCtx.T("Fleet.Drivers.List.SearchLicenseNumber"),
+						Key:   "LicenseNumber",
+					},
+				})
+				@base.Select(&base.SelectProps{
+					Attrs: templ.Attributes{
+						"name": "Status",
+					},
+				}) {
+					<option value="">{ pageCtx.T("Fleet.Drivers.List.AllStatuses") }</option>
+					for _, option := range props.StatusOptions {
+						<option value={ option.Value }>{ pageCtx.T(option.MessageID) }</option>
+					}
+				}
+				@filters.PageSize()
+				@button.Primary(button.Props{
+					Size: button.SizeNormal,
+					Href: "/fleet/drivers/new",
+					Icon: icons.PlusCircle(icons.Props{Size: "18"}),
+				}) {
+					{ pageCtx.T("Fleet.Drivers.List.New") }
+				}
+			</form>
+			@DriversTable(props)
+		</div>
+	</div>
+}
+
+templ Index(props *IndexPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Drivers.Meta.List.Title")},
+	}) {
+		@DriversContent(props)
+	}
+}

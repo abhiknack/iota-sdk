@@ -1,0 +1,506 @@
+{
+  "NavigationLinks": {
+    "Fleet": "Avtoparkni boshqarish",
+    "FleetDashboard": "Boshqaruv paneli",
+    "Vehicles": "Transport vositalari",
+    "Drivers": "Haydovchilar",
+    "Trips": "Sayohatlar",
+    "Maintenance": "Xizmat ko'rsatish",
+    "Fuel": "Yoqilg'i"
+  },
+  "Resources": {
+    "vehicle": "Transport vositalari",
+    "driver": "Haydovchilar",
+    "trip": "Sayohatlar",
+    "maintenance": "Xizmat ko'rsatish",
+    "fuel_entry": "Yoqilg'i yozuvlari"
+  },
+  "Permissions": {
+    "Vehicle": {
+      "Create": "Transport vositalarini yaratish",
+      "Read": "Transport vositalarini ko'rish",
+      "Update": "Transport vositalarini yangilash",
+      "Delete": "Transport vositalarini o'chirish"
+    },
+    "Driver": {
+      "Create": "Haydovchilarni yaratish",
+      "Read": "Haydovchilarni ko'rish",
+      "Update": "Haydovchilarni yangilash",
+      "Delete": "Haydovchilarni o'chirish"
+    },
+    "Trip": {
+      "Create": "Sayohatlarni yaratish",
+      "Read": "Sayohatlarni ko'rish",
+      "Update": "Sayohatlarni yangilash",
+      "Delete": "Sayohatlarni o'chirish"
+    },
+    "Maintenance": {
+      "Create": "Xizmat ko'rsatish yozuvlarini yaratish",
+      "Read": "Xizmat ko'rsatish yozuvlarini ko'rish",
+      "Update": "Xizmat ko'rsatish yozuvlarini yangilash",
+      "Delete": "Xizmat ko'rsatish yozuvlarini o'chirish"
+    },
+    "FuelEntry": {
+      "Create": "Yoqilg'i yozuvlarini yaratish",
+      "Read": "Yoqilg'i yozuvlarini ko'rish",
+      "Update": "Yoqilg'i yozuvlarini yangilash",
+      "Delete": "Yoqilg'i yozuvlarini o'chirish"
+    }
+  },
+  "Dashboard": {
+    "Meta": {
+      "Title": "Avtopark boshqaruv paneli"
+    },
+    "Title": "Avtopark boshqaruv paneli",
+    "Subtitle": "Avtopark operatsiyalariga umumiy ko'rinish",
+    "Stats": {
+      "TotalVehicles": "Jami transport vositalari",
+      "Active": "Faol",
+      "InUse": "Foydalanishda",
+      "Maintenance": "Xizmat ko'rsatishda",
+      "ActiveDrivers": "Faol haydovchilar",
+      "UpcomingMaintenance": "Yaqinlashayotgan xizmat ko'rsatish",
+      "FuelCostMonth": "Yoqilg'i xarajatlari (bu oy)",
+      "MaintenanceCost": "Xizmat ko'rsatish xarajatlari",
+      "TotalCost": "Umumiy xarajatlar"
+    },
+    "Charts": {
+      "Utilization": "Transport vositalaridan foydalanish",
+      "CostTrends": "Xarajatlar tendentsiyalari"
+    },
+    "Actions": {
+      "ExportUtilization": "Foydalanish hisobotini eksport qilish",
+      "ExportCosts": "Xarajatlar hisobotini eksport qilish"
+    }
+  },
+  "Vehicles": {
+    "Meta": {
+      "List": {
+        "Title": "Transport vositalari"
+      },
+      "New": {
+        "Title": "Yangi transport vositasi"
+      },
+      "Edit": {
+        "Title": "Transport vositasini tahrirlash"
+      },
+      "Detail": {
+        "Title": "Transport vositasi tafsilotlari"
+      }
+    },
+    "List": {
+      "New": "Yangi transport vositasi",
+      "Make": "Marka",
+      "Model": "Model",
+      "Year": "Yil",
+      "LicensePlate": "Davlat raqami",
+      "Status": "Holat",
+      "Odometer": "Odometr",
+      "RegistrationExpiry": "Ro'yxatdan o'tish muddati",
+      "SearchMake": "Marka bo'yicha qidirish",
+      "SearchModel": "Model bo'yicha qidirish",
+      "SearchLicensePlate": "Raqam bo'yicha qidirish",
+      "AllStatuses": "Barcha holatlar",
+      "AllYears": "Barcha yillar",
+      "NoVehicles": {
+        "Title": "Transport vositalari topilmadi",
+        "Message": "Avtoparkga birinchi transport vositasini qo'shishdan boshlang"
+      }
+    },
+    "Single": {
+      "Make": "Marka",
+      "Model": "Model",
+      "Year": "Yil",
+      "VIN": "VIN",
+      "LicensePlate": "Davlat raqami",
+      "CurrentOdometer": "Joriy odometr (km)",
+      "RegistrationExpiry": "Ro'yxatdan o'tish muddati",
+      "InsuranceExpiry": "Sug'urta muddati",
+      "Delete": "Transport vositasini o'chirish",
+      "DeleteConfirmation": "Ushbu transport vositasini o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
+    },
+    "Detail": {
+      "ChangeStatus": "Holatni o'zgartirish",
+      "Tabs": {
+        "Info": "Ma'lumot",
+        "Trips": "Sayohatlar",
+        "Maintenance": "Xizmat ko'rsatish",
+        "Fuel": "Yoqilg'i"
+      },
+      "TripsComingSoon": "Sayohatlar tarixi bu yerda ko'rsatiladi",
+      "MaintenanceComingSoon": "Xizmat ko'rsatish yozuvlari bu yerda ko'rsatiladi",
+      "FuelComingSoon": "Yoqilg'i yozuvlari bu yerda ko'rsatiladi"
+    }
+  },
+  "Drivers": {
+    "Meta": {
+      "List": {
+        "Title": "Haydovchilar"
+      },
+      "New": {
+        "Title": "Yangi haydovchi"
+      },
+      "Edit": {
+        "Title": "Haydovchini tahrirlash"
+      },
+      "Detail": {
+        "Title": "Haydovchi tafsilotlari"
+      }
+    },
+    "List": {
+      "New": "Yangi haydovchi",
+      "FullName": "To'liq ism",
+      "LicenseNumber": "Litsenziya raqami",
+      "LicenseExpiry": "Litsenziya muddati",
+      "Phone": "Telefon",
+      "Email": "Elektron pochta",
+      "Status": "Holat",
+      "SearchFirstName": "Ism bo'yicha qidirish",
+      "SearchLastName": "Familiya bo'yicha qidirish",
+      "SearchLicenseNumber": "Litsenziya raqami bo'yicha qidirish",
+      "AllStatuses": "Barcha holatlar",
+      "ExpiringLicense": "Tez orada tugaydi",
+      "NoDrivers": {
+        "Title": "Haydovchilar topilmadi",
+        "Message": "Avtoparkga birinchi haydovchini qo'shishdan boshlang"
+      }
+    },
+    "Single": {
+      "FirstName": "Ism",
+      "LastName": "Familiya",
+      "LicenseNumber": "Litsenziya raqami",
+      "LicenseExpiry": "Litsenziya muddati",
+      "Phone": "Telefon",
+      "Email": "Elektron pochta",
+      "Delete": "Haydovchini o'chirish",
+      "DeleteConfirmation": "Ushbu haydovchini o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
+    },
+    "Detail": {
+      "TotalTrips": "Jami sayohatlar",
+      "ActiveTrips": "Faol sayohatlar",
+      "AssignmentsComingSoon": "Transport vositalari tayinlanishlari bu yerda ko'rsatiladi",
+      "NoTrips": "Ushbu haydovchi uchun sayohatlar topilmadi",
+      "Tabs": {
+        "Info": "Ma'lumot",
+        "Assignments": "Tayinlanishlar",
+        "Trips": "Sayohatlar"
+      },
+      "Trips": {
+        "Vehicle": "Transport vositasi",
+        "Origin": "Qayerdan",
+        "Destination": "Qayerga",
+        "StartTime": "Boshlanish vaqti",
+        "Status": "Holat",
+        "Distance": "Masofa"
+      }
+    }
+  },
+  "Maintenance": {
+    "Meta": {
+      "List": {
+        "Title": "Xizmat ko'rsatish"
+      },
+      "New": {
+        "Title": "Yangi xizmat ko'rsatish"
+      },
+      "Edit": {
+        "Title": "Xizmat ko'rsatishni tahrirlash"
+      }
+    },
+    "List": {
+      "New": "Yangi xizmat ko'rsatish",
+      "Vehicle": "Transport vositasi",
+      "ServiceType": "Xizmat turi",
+      "ServiceDate": "Xizmat sanasi",
+      "Odometer": "Odometr",
+      "Cost": "Narx",
+      "NextServiceDue": "Keyingi xizmat muddati",
+      "Due": "Muddati yetdi",
+      "SearchVehicle": "Transport vositasi bo'yicha qidirish",
+      "SearchProvider": "Xizmat ko'rsatuvchi bo'yicha qidirish",
+      "AllServiceTypes": "Barcha xizmat turlari",
+      "NoMaintenance": {
+        "Title": "Xizmat ko'rsatish yozuvlari topilmadi",
+        "Message": "Birinchi xizmat ko'rsatish yozuvini qo'shishdan boshlang"
+      }
+    },
+    "Single": {
+      "Vehicle": "Transport vositasi",
+      "SelectVehicle": "Transport vositasini tanlang",
+      "ServiceType": "Xizmat turi",
+      "SelectServiceType": "Xizmat turini tanlang",
+      "ServiceDate": "Xizmat sanasi",
+      "Odometer": "Odometr (km)",
+      "Cost": "Narx",
+      "ServiceProvider": "Xizmat ko'rsatuvchi",
+      "Notes": "Izohlar",
+      "NextServiceDue": "Keyingi xizmat muddati",
+      "NextServiceOdometer": "Keyingi xizmat odometri (km)",
+      "Delete": "Xizmat ko'rsatish yozuvini o'chirish",
+      "DeleteConfirmation": "Ushbu xizmat ko'rsatish yozuvini o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
+    }
+  },
+  "Trips": {
+    "Meta": {
+      "List": {
+        "Title": "Sayohatlar"
+      },
+      "New": {
+        "Title": "Yangi sayohat"
+      },
+      "Detail": {
+        "Title": "Sayohat tafsilotlari"
+      }
+    },
+    "List": {
+      "New": "Yangi sayohat",
+      "Vehicle": "Transport vositasi",
+      "Driver": "Haydovchi",
+      "Origin": "Qayerdan",
+      "Destination": "Qayerga",
+      "StartTime": "Boshlanish vaqti",
+      "Status": "Holat",
+      "Distance": "Masofa",
+      "SearchOrigin": "Jo'nash joyi bo'yicha qidirish",
+      "SearchDestination": "Manzil bo'yicha qidirish",
+      "AllVehicles": "Barcha transport vositalari",
+      "AllDrivers": "Barcha haydovchilar",
+      "AllStatuses": "Barcha holatlar",
+      "NoTrips": {
+        "Title": "Sayohatlar topilmadi",
+        "Message": "Birinchi sayohatni rejalashtirish bilan boshlang"
+      }
+    },
+    "Single": {
+      "Vehicle": "Transport vositasi",
+      "Driver": "Haydovchi",
+      "Origin": "Qayerdan",
+      "Destination": "Qayerga",
+      "Purpose": "Maqsad",
+      "StartTime": "Boshlanish vaqti",
+      "EndTime": "Tugash vaqti",
+      "StartOdometer": "Boshlang'ich odometr (km)",
+      "EndOdometer": "Yakuniy odometr (km)",
+      "Status": "Holat",
+      "Distance": "Masofa",
+      "Duration": "Davomiyligi",
+      "AverageSpeed": "O'rtacha tezlik",
+      "CompleteTrip": "Sayohatni yakunlash",
+      "CancelTrip": "Sayohatni bekor qilish",
+      "CancelReason": "Bekor qilish sababi"
+    },
+    "Detail": {
+      "TripInfo": "Sayohat haqida ma'lumot",
+      "Statistics": "Statistika",
+      "Actions": "Amallar"
+    },
+    "Form": {
+      "ConflictDetected": "Konflikt aniqlandi",
+      "ConflictMessage": "Tanlangan transport vositasi ko'rsatilgan vaqt oralig'ida mavjud emas"
+    }
+  },
+  "Fuel": {
+    "Meta": {
+      "List": {
+        "Title": "Yoqilg'i yozuvlari"
+      },
+      "New": {
+        "Title": "Yangi yoqilg'i yozuvi"
+      },
+      "Edit": {
+        "Title": "Yoqilg'i yozuvini tahrirlash"
+      }
+    },
+    "List": {
+      "New": "Yangi yoqilg'i yozuvi",
+      "Vehicle": "Transport vositasi",
+      "Driver": "Haydovchi",
+      "Date": "Sana",
+      "Quantity": "Miqdor",
+      "Cost": "Narx",
+      "Odometer": "Odometr",
+      "FuelType": "Yoqilg'i turi",
+      "Efficiency": "Samaradorlik",
+      "SearchLocation": "Joylashuv bo'yicha qidirish",
+      "AllVehicles": "Barcha transport vositalari",
+      "AllFuelTypes": "Barcha yoqilg'i turlari",
+      "NoFuelEntries": {
+        "Title": "Yoqilg'i yozuvlari topilmadi",
+        "Message": "Birinchi yoqilg'i yozuvini qo'shishdan boshlang"
+      }
+    },
+    "Single": {
+      "Vehicle": "Transport vositasi",
+      "SelectVehicle": "Transport vositasini tanlang",
+      "Driver": "Haydovchi (ixtiyoriy)",
+      "SelectDriver": "Haydovchini tanlang",
+      "Date": "Sana",
+      "FuelType": "Yoqilg'i turi",
+      "SelectFuelType": "Yoqilg'i turini tanlang",
+      "Quantity": "Miqdor (l)",
+      "Cost": "Narx",
+      "Odometer": "Odometr (km)",
+      "Location": "Joylashuv",
+      "Efficiency": "Samaradorlik (km/l)",
+      "Delete": "Yoqilg'i yozuvini o'chirish",
+      "DeleteConfirmation": "Ushbu yoqilg'i yozuvini o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
+    }
+  },
+  "Enums": {
+    "VehicleStatus": {
+      "Available": "Mavjud",
+      "InUse": "Foydalanishda",
+      "Maintenance": "Xizmat ko'rsatishda",
+      "OutOfService": "Ishlamaydi",
+      "Retired": "Hisobdan chiqarilgan"
+    },
+    "DriverStatus": {
+      "Active": "Faol",
+      "Inactive": "Faol emas",
+      "OnLeave": "Ta'tilda",
+      "Terminated": "Ishdan bo'shatilgan"
+    },
+    "TripStatus": {
+      "Scheduled": "Rejalashtirilgan",
+      "InProgress": "Jarayonda",
+      "Completed": "Yakunlangan",
+      "Cancelled": "Bekor qilingan"
+    },
+    "ServiceType": {
+      "OilChange": "Moy almashtirish",
+      "TireRotation": "Shinalarni almashtirish",
+      "BrakeService": "Tormoz xizmati",
+      "Inspection": "Tekshiruv",
+      "Repair": "Ta'mirlash",
+      "Other": "Boshqa"
+    },
+    "FuelType": {
+      "Gasoline": "Benzin",
+      "Diesel": "Dizel",
+      "Electric": "Elektr",
+      "Hybrid": "Gibrid",
+      "CNG": "SPG"
+    }
+  },
+  "Validation": {
+    "Required": "Bu maydon to'ldirilishi shart",
+    "InvalidFormat": "Noto'g'ri format",
+    "InvalidDate": "Noto'g'ri sana",
+    "InvalidNumber": "Noto'g'ri raqam",
+    "InvalidEmail": "Noto'g'ri elektron pochta manzili",
+    "InvalidPhone": "Noto'g'ri telefon raqami",
+    "MinLength": "Minimal uzunlik {0} belgi",
+    "MaxLength": "Maksimal uzunlik {0} belgi",
+    "MinValue": "Minimal qiymat {0}",
+    "MaxValue": "Maksimal qiymat {0}",
+    "FutureDate": "Sana kelajakda bo'lishi kerak",
+    "PastDate": "Sana o'tmishda bo'lishi kerak",
+    "InvalidVIN": "VIN 17 belgidan iborat bo'lishi kerak",
+    "InvalidOdometer": "Odometr ko'rsatkichi oldingi ko'rsatkichdan katta bo'lishi kerak",
+    "InvalidYear": "Yil 1900 va joriy yil orasida bo'lishi kerak",
+    "LicenseExpired": "Litsenziya muddati tugagan",
+    "RegistrationExpired": "Ro'yxatdan o'tish muddati tugagan",
+    "InsuranceExpired": "Sug'urta muddati tugagan"
+  },
+  "Errors": {
+    "VehicleNotFound": "Transport vositasi topilmadi",
+    "DriverNotFound": "Haydovchi topilmadi",
+    "TripNotFound": "Sayohat topilmadi",
+    "MaintenanceNotFound": "Xizmat ko'rsatish yozuvi topilmadi",
+    "FuelEntryNotFound": "Yoqilg'i yozuvi topilmadi",
+    "VehicleNotAvailable": "Transport vositasi tanlangan vaqt oralig'ida mavjud emas",
+    "DriverNotAvailable": "Haydovchi tanlangan vaqt oralig'ida mavjud emas",
+    "InvalidStatusTransition": "Noto'g'ri holat o'tishi",
+    "TripConflict": "Sayohat mavjud jadval bilan to'qnashadi",
+    "ExpiredLicense": "Haydovchi litsenziyasi muddati tugagan",
+    "InvalidOdometerReading": "Odometr ko'rsatkichi noto'g'ri yoki oldingi ko'rsatkichdan kam",
+    "CannotDeleteVehicle": "Faol sayohatlar yoki xizmat ko'rsatish yozuvlari bo'lgan transport vositasini o'chirib bo'lmaydi",
+    "CannotDeleteDriver": "Faol sayohatlari bo'lgan haydovchini o'chirib bo'lmaydi",
+    "CannotCompleteTrip": "Yakuniy odometr ko'rsatkichisiz sayohatni yakunlab bo'lmaydi",
+    "CannotCancelTrip": "Yakunlangan sayohatni bekor qilib bo'lmaydi",
+    "MaintenanceDue": "Ushbu transport vositasi uchun xizmat ko'rsatish kerak",
+    "FuelAnomalyDetected": "Yoqilg'i samaradorligi anomaliyasi aniqlandi",
+    "UnexpectedError": "Kutilmagan xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.",
+    "PermissionDenied": "Sizda bu amalni bajarish uchun ruxsat yo'q",
+    "InvalidDateRange": "Tugash sanasi boshlanish sanasidan keyin bo'lishi kerak"
+  },
+  "Messages": {
+    "VehicleCreated": "Transport vositasi muvaffaqiyatli yaratildi",
+    "VehicleUpdated": "Transport vositasi muvaffaqiyatli yangilandi",
+    "VehicleDeleted": "Transport vositasi muvaffaqiyatli o'chirildi",
+    "VehicleStatusChanged": "Transport vositasi holati muvaffaqiyatli o'zgartirildi",
+    "DriverCreated": "Haydovchi muvaffaqiyatli yaratildi",
+    "DriverUpdated": "Haydovchi muvaffaqiyatli yangilandi",
+    "DriverDeleted": "Haydovchi muvaffaqiyatli o'chirildi",
+    "TripCreated": "Sayohat muvaffaqiyatli yaratildi",
+    "TripUpdated": "Sayohat muvaffaqiyatli yangilandi",
+    "TripCompleted": "Sayohat muvaffaqiyatli yakunlandi",
+    "TripCancelled": "Sayohat muvaffaqiyatli bekor qilindi",
+    "TripDeleted": "Sayohat muvaffaqiyatli o'chirildi",
+    "MaintenanceCreated": "Xizmat ko'rsatish yozuvi muvaffaqiyatli yaratildi",
+    "MaintenanceUpdated": "Xizmat ko'rsatish yozuvi muvaffaqiyatli yangilandi",
+    "MaintenanceDeleted": "Xizmat ko'rsatish yozuvi muvaffaqiyatli o'chirildi",
+    "FuelEntryCreated": "Yoqilg'i yozuvi muvaffaqiyatli yaratildi",
+    "FuelEntryUpdated": "Yoqilg'i yozuvi muvaffaqiyatli yangilandi",
+    "FuelEntryDeleted": "Yoqilg'i yozuvi muvaffaqiyatli o'chirildi",
+    "ReportExported": "Hisobot muvaffaqiyatli eksport qilindi",
+    "ConfirmDelete": "Ushbu elementni o'chirishni xohlaysizmi?",
+    "NoChanges": "Hech qanday o'zgarish kiritilmadi",
+    "SaveChanges": "O'zgarishlarni saqlaysizmi?",
+    "UnsavedChanges": "Sizda saqlanmagan o'zgarishlar bor. Chiqmoqchimisiz?"
+  },
+  "Actions": {
+    "Create": "Yaratish",
+    "Update": "Yangilash",
+    "Delete": "O'chirish",
+    "Cancel": "Bekor qilish",
+    "Save": "Saqlash",
+    "Edit": "Tahrirlash",
+    "View": "Ko'rish",
+    "Back": "Orqaga",
+    "Close": "Yopish",
+    "Confirm": "Tasdiqlash",
+    "Search": "Qidirish",
+    "Filter": "Filtr",
+    "Reset": "Qayta o'rnatish",
+    "Export": "Eksport",
+    "Import": "Import",
+    "Refresh": "Yangilash",
+    "Submit": "Yuborish",
+    "Clear": "Tozalash",
+    "Apply": "Qo'llash",
+    "SelectAll": "Barchasini tanlash",
+    "DeselectAll": "Tanlovni bekor qilish"
+  },
+  "Common": {
+    "Loading": "Yuklanmoqda...",
+    "NoData": "Ma'lumot yo'q",
+    "NoResults": "Natijalar topilmadi",
+    "Page": "Sahifa",
+    "Of": "dan",
+    "PerPage": "Sahifada",
+    "Total": "Jami",
+    "From": "Dan",
+    "To": "Gacha",
+    "Date": "Sana",
+    "Time": "Vaqt",
+    "Status": "Holat",
+    "Actions": "Amallar",
+    "Details": "Tafsilotlar",
+    "Yes": "Ha",
+    "No": "Yo'q",
+    "All": "Barchasi",
+    "None": "Yo'q",
+    "Optional": "Ixtiyoriy",
+    "Required": "Majburiy",
+    "Select": "Tanlash",
+    "Selected": "Tanlangan",
+    "Today": "Bugun",
+    "Yesterday": "Kecha",
+    "Tomorrow": "Ertaga",
+    "ThisWeek": "Bu hafta",
+    "ThisMonth": "Bu oy",
+    "ThisYear": "Bu yil",
+    "Custom": "Maxsus"
+  }
+}

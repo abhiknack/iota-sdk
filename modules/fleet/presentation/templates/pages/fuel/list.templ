@@ -1,0 +1,167 @@
+package fuel
+
+import (
+	"fmt"
+	icons "github.com/iota-uz/icons/phosphor"
+	"github.com/iota-uz/iota-sdk/components/base"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+	"github.com/iota-uz/iota-sdk/components/base/pagination"
+	"github.com/iota-uz/iota-sdk/components/filters"
+	"github.com/iota-uz/iota-sdk/modules/core/presentation/templates/layouts"
+	"github.com/iota-uz/iota-sdk/modules/fleet/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/pkg/composables"
+)
+
+type IndexPageProps struct {
+	FuelEntries      []viewmodels.FuelEntryListViewModel
+	PaginationState  *pagination.State
+	FuelTypeOptions  []struct {
+		Value     string
+		MessageID string
+	}
+	VehicleOptions   []struct {
+		Value string
+		Label string
+	}
+}
+
+templ FuelTable(props *IndexPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="flex flex-col gap-4 table-wrapper">
+		if len(props.FuelEntries) == 0 {
+			@base.TableEmptyState(base.TableEmptyStateProps{
+				Title:       pageCtx.T("Fleet.Fuel.List.NoFuelEntries.Title"),
+				Description: pageCtx.T("Fleet.Fuel.List.NoFuelEntries.Message"),
+			})
+		} else {
+			@base.Table(base.TableProps{
+				Columns: []*base.TableColumn{
+					{Label: pageCtx.T("Fleet.Fuel.List.Vehicle"), Key: "vehicle"},
+					{Label: pageCtx.T("Fleet.Fuel.List.Driver"), Key: "driver"},
+					{Label: pageCtx.T("Fleet.Fuel.List.Date"), Key: "date"},
+					{Label: pageCtx.T("Fleet.Fuel.List.Quantity"), Key: "quantity"},
+					{Label: pageCtx.T("Fleet.Fuel.List.Cost"), Key: "cost"},
+					{Label: pageCtx.T("Fleet.Fuel.List.Odometer"), Key: "odometer"},
+					{Label: pageCtx.T("Fleet.Fuel.List.FuelType"), Key: "fuelType"},
+					{Label: pageCtx.T("Fleet.Fuel.List.Efficiency"), Key: "efficiency"},
+					{Label: pageCtx.T("Actions"), Class: "w-16"},
+				},
+			}) {
+				for _, entry := range props.FuelEntries {
+					@base.TableRow(base.TableRowProps{}) {
+						@base.TableCell(base.TableCellProps{}) {
+							{ entry.VehicleName }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							if entry.DriverName != "" {
+								{ entry.DriverName }
+							} else {
+								<span class="text-surface-100">—</span>
+							}
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							<div x-data="relativeformat">
+								<span x-text={ fmt.Sprintf("format('%s')", entry.Date) }></span>
+							</div>
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ fmt.Sprintf("%s L", entry.Quantity) }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ entry.Cost }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ fmt.Sprintf("%d km", entry.Odometer) }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							{ pageCtx.T(fmt.Sprintf("Fleet.Enums.FuelType.%s", entry.FuelType)) }
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							if entry.Efficiency != "0.00" {
+								{ fmt.Sprintf("%s km/L", entry.Efficiency) }
+							} else {
+								<span class="text-surface-100">—</span>
+							}
+						}
+						@base.TableCell(base.TableCellProps{}) {
+							@button.Secondary(button.Props{
+								Fixed: true,
+								Size:  button.SizeSM,
+								Class: "btn-fixed",
+								Href:  fmt.Sprintf("/fleet/fuel/%s", entry.ID),
+							}) {
+								@icons.PencilSimple(icons.Props{Size: "20"})
+							}
+						}
+					}
+				}
+			}
+			if len(props.PaginationState.Pages()) > 1 {
+				@pagination.Pagination(props.PaginationState)
+			}
+		}
+	</div>
+}
+
+templ FuelContent(props *IndexPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	<div class="m-6">
+		<h1 class="text-2xl font-medium">
+			{ pageCtx.T("Fleet.NavigationLinks.Fuel") }
+		</h1>
+		<div class="mt-5 bg-surface-600 border border-primary rounded-lg">
+			<form
+				class="p-4 flex items-center gap-3"
+				hx-get="/fleet/fuel"
+				hx-trigger="keyup changed delay:500ms from:(form input), change changed from:(form select)"
+				hx-target=".table-wrapper"
+				hx-swap="outerHTML"
+			>
+				@filters.Search([]filters.SearchField{
+					{
+						Label: pageCtx.T("Fleet.Fuel.List.SearchLocation"),
+						Key:   "Location",
+					},
+				})
+				@base.Select(&base.SelectProps{
+					Attrs: templ.Attributes{
+						"name": "VehicleID",
+					},
+				}) {
+					<option value="">{ pageCtx.T("Fleet.Fuel.List.AllVehicles") }</option>
+					for _, option := range props.VehicleOptions {
+						<option value={ option.Value }>{ option.Label }</option>
+					}
+				}
+				@base.Select(&base.SelectProps{
+					Attrs: templ.Attributes{
+						"name": "FuelType",
+					},
+				}) {
+					<option value="">{ pageCtx.T("Fleet.Fuel.List.AllFuelTypes") }</option>
+					for _, option := range props.FuelTypeOptions {
+						<option value={ option.Value }>{ pageCtx.T(option.MessageID) }</option>
+					}
+				}
+				@filters.PageSize()
+				@button.Primary(button.Props{
+					Size: button.SizeNormal,
+					Href: "/fleet/fuel/new",
+					Icon: icons.PlusCircle(icons.Props{Size: "18"}),
+				}) {
+					{ pageCtx.T("Fleet.Fuel.List.New") }
+				}
+			</form>
+			@FuelTable(props)
+		</div>
+	</div>
+}
+
+templ Index(props *IndexPageProps) {
+	{{ pageCtx := composables.UsePageCtx(ctx) }}
+	@layouts.Authenticated(layouts.AuthenticatedProps{
+		BaseProps: layouts.BaseProps{Title: pageCtx.T("Fleet.Fuel.Meta.List.Title")},
+	}) {
+		@FuelContent(props)
+	}
+}

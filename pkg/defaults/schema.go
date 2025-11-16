@@ -8,6 +8,7 @@ import (
 	corePerms "github.com/iota-uz/iota-sdk/modules/core/permissions"
 	crmPerms "github.com/iota-uz/iota-sdk/modules/crm/permissions"
 	financePerms "github.com/iota-uz/iota-sdk/modules/finance/permissions"
+	fleetPerms "github.com/iota-uz/iota-sdk/modules/fleet/permissions"
 	hrmPerms "github.com/iota-uz/iota-sdk/modules/hrm/permissions"
 	loggingPerms "github.com/iota-uz/iota-sdk/modules/logging/permissions"
 	projectsPerms "github.com/iota-uz/iota-sdk/modules/projects/permissions"
@@ -58,9 +59,11 @@ func AllPermissions() []*permission.Permission {
 		len(billingPerms.Permissions) +
 		len(crmPerms.Permissions) +
 		len(financePerms.Permissions) +
+		len(fleetPerms.Permissions) +
 		len(hrmPerms.Permissions) +
 		len(loggingPerms.Permissions) +
 		len(projectsPerms.Permissions) +
+		len(studioPerms.Permissions) +
 		len(warehousePerms.Permissions)
 
 	permissions := make([]*permission.Permission, 0, totalCapacity)
@@ -68,9 +71,11 @@ func AllPermissions() []*permission.Permission {
 	permissions = append(permissions, billingPerms.Permissions...)
 	permissions = append(permissions, crmPerms.Permissions...)
 	permissions = append(permissions, financePerms.Permissions...)
+	permissions = append(permissions, fleetPerms.Permissions...)
 	permissions = append(permissions, hrmPerms.Permissions...)
 	permissions = append(permissions, loggingPerms.Permissions...)
 	permissions = append(permissions, projectsPerms.Permissions...)
+	permissions = append(permissions, studioPerms.Permissions...)
 	permissions = append(permissions, warehousePerms.Permissions...)
 	return permissions
 }
@@ -151,6 +156,28 @@ func buildModulePermissionSets() []rbac.PermissionSet {
 	sets = append(sets,
 		hrm.viewSet("Employee", hrmPerms.EmployeeRead),
 		hrm.manageSet("Employee", hrmPerms.EmployeeCreate, hrmPerms.EmployeeRead, hrmPerms.EmployeeUpdate, hrmPerms.EmployeeDelete),
+	)
+
+	// Fleet module
+	fleet := newPermissionSetBuilder("Fleet")
+	sets = append(sets,
+		fleet.viewSet("Vehicle", fleetPerms.VehicleRead),
+		fleet.manageSet("Vehicle", fleetPerms.VehicleCreate, fleetPerms.VehicleRead, fleetPerms.VehicleUpdate, fleetPerms.VehicleDelete),
+		fleet.viewSet("Driver", fleetPerms.DriverRead),
+		fleet.manageSet("Driver", fleetPerms.DriverCreate, fleetPerms.DriverRead, fleetPerms.DriverUpdate, fleetPerms.DriverDelete),
+		fleet.viewSet("Trip", fleetPerms.TripRead),
+		fleet.manageSet("Trip", fleetPerms.TripCreate, fleetPerms.TripRead, fleetPerms.TripUpdate, fleetPerms.TripDelete),
+		fleet.viewSet("Maintenance", fleetPerms.MaintenanceRead),
+		fleet.manageSet("Maintenance", fleetPerms.MaintenanceCreate, fleetPerms.MaintenanceRead, fleetPerms.MaintenanceUpdate, fleetPerms.MaintenanceDelete),
+		fleet.viewSet("FuelEntry", fleetPerms.FuelEntryRead),
+		fleet.manageSet("FuelEntry", fleetPerms.FuelEntryCreate, fleetPerms.FuelEntryRead, fleetPerms.FuelEntryUpdate, fleetPerms.FuelEntryDelete),
+	)
+
+	// Studio module
+	studio := newPermissionSetBuilder("Studio")
+	sets = append(sets,
+		studio.viewSet("ModuleDefinition", studioPerms.ModuleDefinitionRead),
+		studio.manageSet("ModuleDefinition", studioPerms.ModuleDefinitionCreate, studioPerms.ModuleDefinitionRead, studioPerms.ModuleDefinitionUpdate, studioPerms.ModuleDefinitionDelete),
 	)
 
 	return sets

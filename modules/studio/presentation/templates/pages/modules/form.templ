@@ -1,0 +1,91 @@
+package modules
+
+import (
+	"github.com/iota-uz/iota-sdk/modules/studio/presentation/viewmodels"
+	"github.com/iota-uz/iota-sdk/components/base/input"
+	"github.com/iota-uz/iota-sdk/components/base/button"
+)
+
+templ ModuleForm(vm *viewmodels.ModuleFormViewModel) {
+	<div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+		<h3 class="text-xl font-bold mb-4">
+			if vm.Module != nil {
+				{ vm.PageCtx.T("Studio.Modules.Edit") }
+			} else {
+				{ vm.PageCtx.T("Studio.Modules.CreateNew") }
+			}
+		</h3>
+		
+		<form
+			if vm.Module != nil {
+				hx-put={ "/studio/modules/" + vm.Module.ID }
+			} else {
+				hx-post="/studio/modules"
+			}
+			hx-target="#content"
+			class="space-y-4"
+		>
+			if vm.Module == nil {
+				@input.Text(&input.Props{
+					Label: vm.PageCtx.T("Studio.Modules.Name"),
+					Placeholder: vm.PageCtx.T("Studio.Modules.NamePlaceholder"),
+					Error: vm.ValidationErrors["Name"],
+					Attrs: templ.Attributes{
+						"name": "Name",
+						"required": true,
+						"value": if vm.Module != nil { vm.Module.Name } else { "" },
+					},
+				})
+			}
+			
+			@input.Text(&input.Props{
+				Label: vm.PageCtx.T("Studio.Modules.DisplayName"),
+				Placeholder: vm.PageCtx.T("Studio.Modules.DisplayNamePlaceholder"),
+				Error: vm.ValidationErrors["DisplayName"],
+				Attrs: templ.Attributes{
+					"name": "DisplayName",
+					"required": true,
+					"value": if vm.Module != nil { vm.Module.DisplayName } else { "" },
+				},
+			})
+			
+			@input.Textarea(&input.Props{
+				Label: vm.PageCtx.T("Studio.Modules.Description"),
+				Placeholder: vm.PageCtx.T("Studio.Modules.DescriptionPlaceholder"),
+				Error: vm.ValidationErrors["Description"],
+				Attrs: templ.Attributes{
+					"name": "Description",
+					"rows": "3",
+					"value": if vm.Module != nil { vm.Module.Description } else { "" },
+				},
+			})
+			
+			@input.Text(&input.Props{
+				Label: vm.PageCtx.T("Studio.Modules.Icon"),
+				Placeholder: "📦",
+				Error: vm.ValidationErrors["Icon"],
+				Attrs: templ.Attributes{
+					"name": "Icon",
+					"required": true,
+					"value": if vm.Module != nil { vm.Module.Icon } else { "" },
+				},
+			})
+			
+			<div class="flex justify-end space-x-2">
+				<button
+					type="button"
+					onclick="document.getElementById('module-form-modal').innerHTML = ''"
+					class="px-4 py-2 bg-surface-200 text-surface-700 rounded hover:bg-surface-300"
+				>
+					{ vm.PageCtx.T("Common.Cancel") }
+				</button>
+				@button.Primary(button.Props{
+					Type: "submit",
+					Size: button.SizeNormal,
+				}) {
+					{ vm.PageCtx.T("Common.Save") }
+				}
+			</div>
+		</form>
+	</div>
+}
